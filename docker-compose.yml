@@ -1,18 +1,18 @@
 version: "3.9"
 services:
   postgres:
-    image: postgres:16.0-alpine3.18
+    image: postgres:16.0-alpine
     environment:
       POSTGRES_DB: "dev_questions"
       POSTGRES_USER: "dev_questions"
       POSTGRES_PASSWORD: "dev_pass"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - .:/docker-entrypoint-initdb.d
-      - tests-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
 volumes:
-  tests-data:
+  dev-questions-data:
 
