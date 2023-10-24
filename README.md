@@ -8,6 +8,7 @@
 ### How to run
 
 ```commandline
+cp .env.example .env
 npm run build
 php -S localhost:8000
 ```
