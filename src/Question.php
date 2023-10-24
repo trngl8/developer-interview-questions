@@ -6,11 +6,10 @@ class Question
 {
     private $DB;
 
-    public function __construct()
+    public function __construct(string $dsn, string $username, string $password)
     {
-        $dsn = "pgsql:host=localhost;port=5432;dbname=postgres;";
         try {
-            $pdoDB = new \PDO($dsn, 'postgres', 'postgres', [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+            $pdoDB = new \PDO($dsn, $username, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         } catch (\PDOException $e) {
             die($e->getMessage());
         }
