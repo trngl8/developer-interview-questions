@@ -10,7 +10,7 @@ class QuestionTest extends TestCase
     public function testQuestion(): void
     {
         $question = new Question();
-        $question->getRecords();
-        $this->assertTrue(true);
+        $records = $question->getRecords();
+        $this->assertGreaterThan(0, count($records));
     }
 }
