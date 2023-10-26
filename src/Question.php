@@ -14,7 +14,7 @@ class Question
             die($e->getMessage());
         }
         $this->DB = $pdoDB;
-        echo "Connected to the postgres database successfully!";
+        //echo "Connected to the postgres database successfully!"; //TODO: move to the logger
     }
 
     public function getRecords(): array
