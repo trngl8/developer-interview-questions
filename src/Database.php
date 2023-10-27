@@ -14,7 +14,6 @@ class Database
             die($e->getMessage());
         }
         $this->DB = $pdoDB;
-        //echo "Connected to the postgres database successfully!"; //TODO: move to the logger
     }
 
     public function getRecords(string $table): array
@@ -31,5 +30,18 @@ class Database
         $stmt = $this->DB->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function addRecord(string $table, array $data): int
+    {
+        $sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            $table,
+            implode(',', array_keys($data)),
+            implode(',', array_fill(0, count($data), '?'))
+        );
+        $stmt = $this->DB->prepare($sql);
+        $stmt->execute(array_values($data));
+        return $this->DB->lastInsertId();
     }
 }
