@@ -6,7 +6,7 @@ class Database
 {
     private $DB;
 
-    public function __construct(string $dsn, string $username, string $password)
+    public function __construct(string $dsn, ?string $username=null, ?string $password=null)
     {
         try {
             $pdoDB = new \PDO($dsn, $username, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
