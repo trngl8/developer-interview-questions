@@ -3,6 +3,7 @@
     "require": {
         "php": ">=7.4",
         "ext-pdo": "*",
+        "ext-sqlite3": "*",
         "symfony/dotenv": "^6.3",
         "twig/twig": "^3.0"
     },
