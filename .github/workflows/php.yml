@@ -32,6 +32,11 @@ jobs:
       - name: Copy env
         run: cp .env.example .env
 
+      - name: Create SQLite database
+        run: |
+          mkdir -p var
+          touch var/test.db
+
       - name: Init data
         run: composer run-script init
 
