@@ -38,7 +38,7 @@ jobs:
           touch var/test.db
 
       - name: Init data
-        run: composer run-script init
+        run: composer run-script init-db
 
       - name: Run test suite
         run: composer run-script tests

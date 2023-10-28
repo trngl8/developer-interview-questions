@@ -21,7 +21,7 @@
         }
     },
     "scripts": {
-        "init": [
+        "init-db": [
             "php bin/app"
         ],
         "tests": [
