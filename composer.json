@@ -21,6 +21,9 @@
         }
     },
     "scripts": {
+        "init": [
+            "php bin/app"
+        ],
         "tests": [
             "php vendor/bin/phpunit tests"
         ]
