@@ -11,10 +11,9 @@ class DatabaseTest extends TestCase
 
     public function setUp(): void {
         parent::setUp();
-
         $this->database = new Database("sqlite://" . __DIR__ . sprintf("/../var/%s.db", 'test'));
-
     }
+
     public function testDatabaseRecords(): void
     {
         $records = $this->database->getRecords('questions');
@@ -29,7 +28,7 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseAddRecord(): void
     {
-        $id = $this->database->addRecord('questions', ['title' => 'What is your name?']);
+        $id = $this->database->addRecord('questions', ['title' => 'How is going on?', 'created_at' => date('Y-m-d H:i:s')]);
         $this->assertEquals(2, $id);
     }
 
