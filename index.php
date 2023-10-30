@@ -14,6 +14,11 @@ use Monolog\Handler\StreamHandler;
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__.'/.env');
 
+$customEnv = sprintf('%s/.env.%s', __DIR__, $_ENV['APP_ENV']);
+if (file_exists($customEnv)) {
+    $dotenv->load($customEnv);
+}
+
 $loader = new FilesystemLoader(__DIR__ . '/templates');
 $twig = new Environment($loader, [
     'cache' => __DIR__ . '/var/cache/twig',
@@ -21,7 +26,7 @@ $twig = new Environment($loader, [
 ]);
 
 try {
-    $db = DatabaseFactory::create($_ENV['APP_ENV']);
+    $db = DatabaseFactory::create($_ENV['DATABASE_DSN']);
     $model = new Question($db);
     $records = $model->getQuestions();
 } catch (\Exception $e) {
@@ -31,9 +36,8 @@ try {
         $record->extra['file'] = $e->getFile();
         return $record;
     });
-    $log->warning($e->getMessage(), ['line' => $e->getLine()]);
-    $log->error($e->getTraceAsString());
-    echo $twig->render('error.html.twig', ['message' => $e->getMessage()]);
+    $log->error($e->getMessage(), ['line' => $e->getLine()]);
+    echo $twig->render('error.html.twig', ['message' => "Database error: {$e->getCode()}"]);
     exit;
 }
 

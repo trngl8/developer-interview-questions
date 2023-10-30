@@ -2,18 +2,10 @@
 
 namespace App;
 
-use Symfony\Component\Dotenv\Dotenv;
-
 class DatabaseFactory
 {
-    public static function create(string $env): Database
+    public static function create(string $dsn): Database
     {
-        $dotenv = new Dotenv();
-        $dotenv->load(__DIR__.'/../.env');
-        if (file_exists(__DIR__.sprintf('/../.env.%s', $env))) {
-            $dotenv->load(__DIR__.sprintf('/../.env.%s', $env));
-        }
-        $dsn = $_ENV['DATABASE_DSN'];
         $matches = [];
         preg_match('/^(\w+):\/\/(.*)/', $dsn, $matches);
         $type = $matches[1];
