@@ -15,8 +15,9 @@ class DatabaseFactory
         }
         $dsn = $_ENV['DATABASE_DSN'];
         $matches = [];
-        preg_match('/^(\w+):/', $dsn, $matches);
+        preg_match('/^(\w+):\/\/(.*)/', $dsn, $matches);
         $type = $matches[1];
+        $path = $matches[2];
 
         switch ($type) {
             case 'postgres':
@@ -25,8 +26,10 @@ class DatabaseFactory
                     $params['user'],
                     $params['pass']
                 );
+            case 'sqlite':
+                return new Database(sprintf("sqlite://%s", $path));
             default:
-                return new Database("sqlite://" . __DIR__ . sprintf("/../var/%s.db",$env));
+                throw new \Exception(sprintf('Unsupported database type: %s', $type));
         }
     }
 }

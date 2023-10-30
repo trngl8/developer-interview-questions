@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Database;
+use App\DatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
@@ -11,7 +12,7 @@ class DatabaseTest extends TestCase
 
     public function setUp(): void {
         parent::setUp();
-        $this->database = new Database("sqlite://" . __DIR__ . sprintf("/../var/%s.db", 'test'));
+        $this->database = DatabaseFactory::create('test');
     }
 
     public function testDatabaseRecords(): void

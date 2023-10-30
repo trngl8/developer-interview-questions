@@ -13,7 +13,7 @@ use Monolog\Handler\StreamHandler;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__.'/.env');
-$db = DatabaseFactory::create($_ENV['APP_ENV']);
+
 $loader = new FilesystemLoader(__DIR__ . '/templates');
 $twig = new Environment($loader, [
     'cache' => __DIR__ . '/var/cache/twig',
@@ -21,12 +21,17 @@ $twig = new Environment($loader, [
 ]);
 
 try {
+    $db = DatabaseFactory::create($_ENV['APP_ENV']);
     $model = new Question($db);
     $records = $model->getQuestions();
-} catch (Exception $e) {
+} catch (\Exception $e) {
     $log = new Logger('database');
     $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
-    $log->warning($e->getMessage());
+    $log->pushProcessor(function ($record) use ($e) {
+        $record->extra['file'] = $e->getFile();
+        return $record;
+    });
+    $log->warning($e->getMessage(), ['line' => $e->getLine()]);
     $log->error($e->getTraceAsString());
     echo $twig->render('error.html.twig', ['message' => $e->getMessage()]);
     exit;
