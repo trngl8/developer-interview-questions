@@ -22,6 +22,9 @@
         }
     },
     "scripts": {
+        "init-db": [
+            "php bin/app"
+        ],
         "tests": [
             "php vendor/bin/phpunit tests"
         ]

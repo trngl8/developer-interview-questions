@@ -13,3 +13,9 @@ $db->query('CREATE TABLE IF NOT EXISTS questions(
     created_at DATETIME NOT NULL
 )');
 echo "Created table questions\n";
+
+$db->query('INSERT INTO questions(title, created_at) VALUES("What is an abstract class?", "2020-01-01 10:00:00")');
+$db->query('INSERT INTO questions(title, created_at) VALUES("Have PHP language support multiple inheritance?", "2020-01-01 10:00:00")');
+$db->query('INSERT INTO questions(title, created_at) VALUES("Why we use traits in PHP?", "2020-01-01 10:00:00")');
+echo "Inserted 3 questions \n";
+echo "The last id is " . $db->lastInsertRowID() . "\n";
