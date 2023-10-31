@@ -44,4 +44,12 @@ class Database
         $stmt->execute(array_values($data));
         return $this->DB->lastInsertId();
     }
+
+    public function removeRecord(int $id): void
+    {
+        $sql = sprintf("DELETE FROM questions WHERE id=%d", $id);
+        $stmt = $this->DB->prepare($sql);
+        $stmt->execute();
+    }
+
 }
