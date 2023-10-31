@@ -1,1 +1,17 @@
+{% if message is defined %}
+    <p><b>{{ message }}</b></p>
+{% endif %}
+
 <p>Found {{ questions|length }} records</p>
+
+<form method="post">
+    <label for="username">Your name:</label>
+    <br />
+    <input type="text" name="username" id="username" />
+    <br />
+    <label for="question">Your question:</label>
+    <br />
+    <textarea name="question" id="question"></textarea>
+    <br />
+    <input type="submit" value="Submit" />
+</form>
