@@ -13,7 +13,7 @@ class QuestionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->database = DatabaseFactory::create('test');
+        $this->database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../var/test.db');
     }
 
     public function testQuestion(): void
