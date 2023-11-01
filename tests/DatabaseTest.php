@@ -19,19 +19,26 @@ class DatabaseTest extends TestCase
     public function testDatabaseRecords(): void
     {
         $records = $this->database->getRecords('questions');
-        $this->assertGreaterThan(0, count($records));
+        $this->assertCount(3, $records);
     }
 
     public function testDatabaseRecord(): void
     {
         $record = $this->database->getRecord('questions', 1);
-        $this->assertEquals('How is going on?', $record['title']);
+        $this->assertEquals('What is an abstract class?', $record['title']);
     }
 
     public function testDatabaseAddRecord(): void
     {
         $id = $this->database->addRecord('questions', ['title' => 'How is going on?', 'created_at' => date('Y-m-d H:i:s')]);
-        $this->assertGreaterThan(1, $id);
+        $this->assertEquals(4, $id);
+    }
+
+    public function testDatabaseRemoveRecord(): void
+    {
+        $this->database->removeRecord(4);
+        $records = $this->database->getRecords('questions');
+        $this->assertCount(3, $records);
     }
 
 }
