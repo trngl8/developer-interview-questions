@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HttpIndexTest extends TestCase
@@ -13,7 +14,7 @@ class HttpIndexTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = HttpClient::create();
+        $this->httpClient = new MockHttpClient();
     }
 
     public function testIndexSuccess(): void
