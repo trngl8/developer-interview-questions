@@ -10,6 +10,7 @@ use Twig\Environment;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Symfony\Component\HttpFoundation\Request;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__.'/.env');
@@ -25,12 +26,11 @@ $twig = new Environment($loader, [
     'debug' => $_ENV['APP_DEBUG'],
 ]);
 
-session_start();
+$request = Request::createFromGlobals();
+$session = $request->getSession();
 
-if($_SESSION['message']) {
-    $twig->addGlobal('message', $_SESSION['message']);
-    session_unset();
-    session_destroy();
+if($session->get('message')) {
+    $twig->addGlobal('message', $request->getSession()->get('message'));
 }
 
 try {
@@ -49,7 +49,12 @@ try {
     exit;
 }
 
-if ($_POST) {
+if($request->request) {
+    if(!$request->request->get('question')) {
+        $session->set('message', 'Question is required');
+        header('Location: /');
+        exit;
+    }
     $model->addQuestion([
         'title' => $_POST['question'],
         'created_at' => date('Y-m-d H:i:s'),
