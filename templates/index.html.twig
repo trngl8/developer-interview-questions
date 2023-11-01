@@ -1,17 +1,47 @@
-{% if message is defined %}
-    <p><b>{{ message }}</b></p>
-{% endif %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Developer Interview</title>
+    <link rel="stylesheet" href="../dist/main.css">
+</head>
+<body>
 
-<p>Found {{ questions|length }} records</p>
+<main class="container">
+    <div class="bg-body-tertiary p-5 rounded mb-5">
+        <h1>Developer interview questions</h1>
+    </div>
+</main>
 
-<form method="post">
-    <label for="username">Your name:</label>
-    <br />
-    <input type="text" name="username" id="username" />
-    <br />
-    <label for="question">Your question:</label>
-    <br />
-    <textarea name="question" id="question"></textarea>
-    <br />
-    <input type="submit" value="Submit" />
-</form>
+<div class="container">
+    {% if message is defined %}
+        <p><b>{{ message }}</b></p>
+    {% endif %}
+</div>
+
+<div class="container">
+    <h3 class="mb-4">Found {{ questions|length }} records</h3>
+    <div class="list-group mb-5">
+        {% for item in questions %}
+            <a href="#" class="list-group-item list-group-item-action">
+                {{ item.title }}
+            </a>
+        {% endfor %}
+        <a class="list-group-item list-group-item-action disabled" aria-disabled="true">Your question</a>
+    </div>
+
+    <h3 class="mb-2">Your question</h3>
+    <form method="post">
+        <label for="username" class="form-label mt-2">Your name:</label>
+        <input type="text" class="form-control mt-2" name="username" id="username" />
+        <label for="question" class="form-label mt-2">Your question:</label>
+        <textarea name="question" class="form-control mt-2" id="question"></textarea>
+        <input type="submit" class="btn btn-primary mt-4" value="Submit" />
+    </form>
+
+    </div>
+    <script src="../dist/main.js"></script>
+
+</body>
+</html>
