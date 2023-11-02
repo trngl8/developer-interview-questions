@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\e2e;
+namespace App\Tests\E2E;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\HttpClient;
