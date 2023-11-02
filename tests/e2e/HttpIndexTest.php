@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\e2e;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HttpIndexTest extends TestCase
@@ -14,7 +13,7 @@ class HttpIndexTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = new MockHttpClient();
+        $this->httpClient = HttpClient::create();
     }
 
     public function testIndexSuccess(): void

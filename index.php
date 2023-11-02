@@ -27,10 +27,14 @@ $twig = new Environment($loader, [
 ]);
 
 $request = Request::createFromGlobals();
-$session = $request->getSession();
+$request->overrideGlobals();
 
-if($session->get('message')) {
-    $twig->addGlobal('message', $request->getSession()->get('message'));
+session_start();
+
+if(array_key_exists('message', $_SESSION)) {
+    $twig->addGlobal('message', $_SESSION['message']);
+    session_unset();
+    session_destroy();
 }
 
 try {
@@ -40,18 +44,18 @@ try {
 } catch (\Exception $e) {
     $log = new Logger('database');
     $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
-    $log->pushProcessor(function ($record) use ($e) {
-        $record->extra['file'] = $e->getFile();
-        return $record;
+    $log->pushProcessor(function ($logItem) use ($e) {
+        $logItem->extra['file'] = $e->getFile();
+        return $logItem;
     });
     $log->error($e->getMessage(), ['line' => $e->getLine()]);
     echo $twig->render('error.html.twig', ['message' => "Database error: {$e->getCode()}"]);
     exit;
 }
 
-if($request->request) {
+if ($request->getMethod() === 'POST') {
     if(!$request->request->get('question')) {
-        $session->set('message', 'Question is required');
+        $_SESSION['message'] = 'Question is required';
         header('Location: /');
         exit;
     }
@@ -61,6 +65,7 @@ if($request->request) {
     ]);
     $_SESSION['message'] = 'Question added';
     header('Location: /');
+    exit;
 }
 
 echo $twig->render('index.html.twig', ['questions' => $records]);

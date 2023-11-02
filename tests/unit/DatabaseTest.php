@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\unit;
 
-use App\Database;
 use App\DatabaseFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Dotenv\Dotenv;
 
 class DatabaseTest extends TestCase
 {

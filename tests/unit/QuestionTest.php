@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\unit;
 
 use App\DatabaseFactory;
 use App\Question;
