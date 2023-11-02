@@ -22,16 +22,16 @@ class Core
     public function init(): void
     {
         $dotenv = new Dotenv();
-        $dotenv->load(__DIR__.'/.env');
+        $dotenv->load(__DIR__.'/../.env');
 
-        $customEnv = sprintf('%s/.env.%s', __DIR__, $this->env);
+        $customEnv = sprintf('%s/../.env.%s', __DIR__, $this->env);
         if (file_exists($customEnv)) {
             $dotenv->load($customEnv);
         }
 
-        $loader = new FilesystemLoader(__DIR__ . '/templates');
+        $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->twig = new Environment($loader, [
-            'cache' => __DIR__ . '/var/cache/twig',
+            'cache' => __DIR__ . '/../var/cache/twig',
             'debug' => $this->debug,
         ]);
     }
