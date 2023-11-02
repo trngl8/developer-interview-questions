@@ -11,7 +11,7 @@ class DatabaseTest extends TestCase
 
     public function setUp(): void {
         parent::setUp();
-        $this->database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../var/test.db');
+        $this->database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../../var/test.db');
     }
 
     public function testDatabaseRecords(): void
