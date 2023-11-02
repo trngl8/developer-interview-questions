@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Unit;
 
-use App\Database;
 use App\DatabaseFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Dotenv\Dotenv;
 
 class DatabaseTest extends TestCase
 {
@@ -13,7 +11,7 @@ class DatabaseTest extends TestCase
 
     public function setUp(): void {
         parent::setUp();
-        $this->database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../var/test.db');
+        $this->database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../../var/test.db');
     }
 
     public function testDatabaseRecords(): void
