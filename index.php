@@ -2,34 +2,23 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+use App\Core;
 use App\DatabaseFactory;
 use App\Question;
-use Symfony\Component\Dotenv\Dotenv;
-use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Symfony\Component\HttpFoundation\Request;
 
-$dotenv = new Dotenv();
-$dotenv->load(__DIR__.'/.env');
-
-$customEnv = sprintf('%s/.env.%s', __DIR__, $_ENV['APP_ENV']);
-if (file_exists($customEnv)) {
-    $dotenv->load($customEnv);
-}
-
-$loader = new FilesystemLoader(__DIR__ . '/templates');
-$twig = new Environment($loader, [
-    'cache' => __DIR__ . '/var/cache/twig',
-    'debug' => $_ENV['APP_DEBUG'],
-]);
+$core = new Core($_ENV['APP_ENV'], $_ENV['APP_DEBUG']);
+$core->init();
 
 $request = Request::createFromGlobals();
 $request->overrideGlobals();
 
 session_start();
+
+$twig = $core->getTemplateEngine();
 
 if(array_key_exists('message', $_SESSION)) {
     $twig->addGlobal('message', $_SESSION['message']);
