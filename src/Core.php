@@ -12,6 +12,8 @@ class Core
 
     private bool $debug;
 
+    private $corePath;
+
     private Environment $twig;
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
@@ -22,16 +24,17 @@ class Core
     public function init(): void
     {
         $dotenv = new Dotenv();
-        $dotenv->load(__DIR__.'/../.env');
+        $corePath = __DIR__.'/../';
+        $dotenv->load($corePath . '.env');
 
-        $customEnv = sprintf('%s/../.env.%s', __DIR__, $this->env);
+        $customEnv = sprintf($corePath . '.env.%s', $this->env);
         if (file_exists($customEnv)) {
             $dotenv->load($customEnv);
         }
 
-        $loader = new FilesystemLoader(__DIR__ . '/../templates');
+        $loader = new FilesystemLoader($corePath . 'templates');
         $this->twig = new Environment($loader, [
-            'cache' => __DIR__ . '/../var/cache/twig',
+            'cache' => $corePath . 'var/cache/twig',
             'debug' => $this->debug,
         ]);
     }
