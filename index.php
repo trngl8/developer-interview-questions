@@ -9,7 +9,6 @@ use Monolog\Level;
 use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 $corePath = __DIR__.'/';
 $dotenv = new Dotenv();
@@ -35,7 +34,6 @@ try {
     $db = $core->getDatabase($_ENV['DATABASE_DSN']);
     $model = new Question($db);
     $response = $core->run($request, $model);
-    $response->send();
 } catch (Exception $e) {
     $log = new Logger('database');
     $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
@@ -45,5 +43,6 @@ try {
     });
     $log->error($e->getMessage(), ['line' => $e->getLine()]);
     $response = $core->getExceptionResponse();
-    $response->send();
 }
+
+$response->send();
