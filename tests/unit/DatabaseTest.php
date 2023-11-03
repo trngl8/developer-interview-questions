@@ -34,7 +34,7 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseRemoveRecord(): void
     {
-        $this->database->removeRecord(4);
+        $this->database->removeRecord('questions', 4);
         $records = $this->database->getRecords('questions');
         $this->assertCount(3, $records);
     }
