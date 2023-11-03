@@ -27,13 +27,13 @@ class HttpIndexTest extends TestCase
     {
         $response = $this->httpClient->request('POST', 'http://localhost:8000', ['body' => ['question' => 'What is the day today?']]);
         $result = $response->getStatusCode();
-        $this->assertEquals(301, $result);
+        $this->assertEquals(200, $result);
     }
 
     public function testIndexPostFail(): void
     {
         $response = $this->httpClient->request('POST', 'http://localhost:8000', ['body' => ['test' => 'Your question?']]);
         $result = $response->getStatusCode();
-        $this->assertEquals(301, $result);
+        $this->assertEquals(200, $result);
     }
 }

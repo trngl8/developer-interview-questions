@@ -3,6 +3,9 @@
 namespace App;
 
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
@@ -39,6 +42,29 @@ class Core
             'cache' => $this->corePath . 'var/cache/twig',
             'debug' => $this->debug,
         ]);
+    }
+
+    public function run(Request $request, $model): Response
+    {
+        if ($request->getMethod() === 'POST') {
+            if(!$request->request->get('question')) {
+                $_SESSION['message'] = 'Question is required';
+                $response = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+                echo $response->send();
+                exit;
+            }
+            $model->addQuestion([
+                'title' => $_POST['question'],
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+            $_SESSION['message'] = 'Question added';
+            $response = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+            echo $response->send();
+            exit;
+        }
+        $records = $model->getQuestions();
+        $content = $this->twig->render('index.html.twig', ['questions' => $records]);
+        return new Response($content);
     }
 
     public function getTemplateEngine(): Environment
