@@ -49,18 +49,14 @@ class Core
         if ($request->getMethod() === 'POST') {
             if(!$request->request->get('question')) {
                 $_SESSION['message'] = 'Question is required';
-                $response = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
-                echo $response->send();
-                exit;
+                return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
             }
             $model->addQuestion([
-                'title' => $_POST['question'],
+                'title' => $request->request->get('question'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = 'Question added';
-            $response = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
-            echo $response->send();
-            exit;
+            return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
         }
         $records = $model->getQuestions();
         $content = $this->twig->render('index.html.twig', ['questions' => $records]);
