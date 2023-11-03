@@ -36,7 +36,7 @@ try {
     $response = $core->run($request, $model);
 } catch (Exception $e) {
     $log = new Logger('database');
-    $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
+    $log->pushHandler(new StreamHandler($core->getRootDir() . 'var/logs/database.log', Level::Warning));
     $log->pushProcessor(function ($logItem) use ($e) {
         $logItem->extra['file'] = $e->getFile();
         return $logItem;

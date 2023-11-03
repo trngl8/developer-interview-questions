@@ -75,4 +75,12 @@ class CoreTest extends TestCase
         $result = $core->run($request, $model);
         $this->assertTrue((bool)$result);
     }
+
+    public function testGetExceptionResponse(): void
+    {
+        $core = new Core('test', true);
+        $core->init();
+        $result = $core->getExceptionResponse();
+        $this->assertTrue((bool)$result);
+    }
 }

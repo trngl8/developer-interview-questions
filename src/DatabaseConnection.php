@@ -2,7 +2,7 @@
 
 namespace App;
 
-class DatabaseConnection
+abstract class DatabaseConnection
 {
     private $DB;
 

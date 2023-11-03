@@ -98,6 +98,11 @@ class Core
         return $db;
     }
 
+    public function getRootDir(): string
+    {
+        return $this->corePath;
+    }
+
     public function getExceptionResponse(): Response
     {
         $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'General error']));
