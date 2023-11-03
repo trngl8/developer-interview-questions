@@ -16,6 +16,7 @@ class CoreTest extends TestCase
         $core->init();
         $result = $core->getTemplateEngine();
         $this->assertTrue((bool)$result);
+        $this->assertTrue((bool)$core->getRootDir());
     }
 
     public function testGetDatabaseSuccess(): void
