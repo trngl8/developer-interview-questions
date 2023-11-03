@@ -11,7 +11,7 @@ class DatabaseConnection
         try {
             $pdoDB = new \PDO($dsn, $username, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         } catch (\PDOException $e) {
-            throw  new \Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
         $this->DB = $pdoDB;
     }

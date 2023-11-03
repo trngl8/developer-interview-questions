@@ -2,9 +2,6 @@
 
 namespace App;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
-use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +28,20 @@ class Core
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
         $this->dotenv = new Dotenv();
-        $this->corePath = __DIR__.'/../';
-        $this->dotenv->load($this->corePath . '.env');
+
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
+        $r = new \ReflectionObject($this);
+        $dir = $rootDir = \dirname($r->getFileName());
+        $this->corePath = $dir;
+        while (!is_file($dir.'/composer.json')) {
+            if ($dir === \dirname($dir)) {
+                $this->corePath = $rootDir;
+            }
+            $dir = \dirname($dir);
+        }
+        $this->corePath = $dir . '/';
+        $this->dotenv->load($this->corePath . '.env');
     }
 
     public function init(): void
@@ -81,20 +88,20 @@ class Core
             $dsn = $this->databaseDSN;
         }
 
+        $dsn = str_replace('%kernel.project_directory%', $this->corePath, $dsn);
         try {
             $db = DatabaseFactory::create($dsn);
         } catch (\Exception $e) {
-            $log = new Logger('database');
-            $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
-            $log->pushProcessor(function ($logItem) use ($e) {
-                $logItem->extra['file'] = $e->getFile();
-                return $logItem;
-            });
-            $log->error($e->getMessage(), ['line' => $e->getLine()]);
-            $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => "Database error: {$e->getCode()}"]));
+           throw new \Exception($e->getMessage());
         }
 
         return $db;
+    }
+
+    public function getExceptionResponse(): Response
+    {
+        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'General error']));
+        return $this->lastResponse;
     }
 
     public function getTemplateEngine(): Environment

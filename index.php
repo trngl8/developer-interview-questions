@@ -4,8 +4,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Core;
 use App\Question;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 $corePath = __DIR__.'/';
 $dotenv = new Dotenv();
@@ -27,9 +31,19 @@ if(array_key_exists('message', $_SESSION)) {
     session_destroy();
 }
 
-$db = $core->getDatabase($_ENV['DATABASE_DSN']);
-
-$model = new Question($db);
-
-$response = $core->run($request, $model);
-$response->send();
+try {
+    $db = $core->getDatabase($_ENV['DATABASE_DSN']);
+    $model = new Question($db);
+    $response = $core->run($request, $model);
+    $response->send();
+} catch (Exception $e) {
+    $log = new Logger('database');
+    $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
+    $log->pushProcessor(function ($logItem) use ($e) {
+        $logItem->extra['file'] = $e->getFile();
+        return $logItem;
+    });
+    $log->error($e->getMessage(), ['line' => $e->getLine()]);
+    $response = $core->getExceptionResponse();
+    $response->send();
+}
