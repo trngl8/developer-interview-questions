@@ -33,10 +33,9 @@ class Core
         $this->debug = $APP_DEBUG;
         $r = new \ReflectionObject($this);
         $dir = $rootDir = \dirname($r->getFileName());
-        $this->corePath = $dir;
         while (!is_file($dir.'/composer.json')) {
             if ($dir === \dirname($dir)) {
-                $this->corePath = $rootDir;
+                $dir = $rootDir;
             }
             $dir = \dirname($dir);
         }
