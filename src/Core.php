@@ -15,26 +15,28 @@ class Core
     private $corePath;
 
     private Environment $twig;
+
+    private Dotenv $dotenv;
+
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
+        $this->dotenv = new Dotenv();
+        $this->corePath = __DIR__.'/../';
+        $this->dotenv->load($this->corePath . '.env');
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
     }
 
     public function init(): void
     {
-        $dotenv = new Dotenv();
-        $corePath = __DIR__.'/../';
-        $dotenv->load($corePath . '.env');
-
-        $customEnv = sprintf($corePath . '.env.%s', $this->env);
+        $customEnv = sprintf($this->corePath . '.env.%s', $this->env);
         if (file_exists($customEnv)) {
-            $dotenv->load($customEnv);
+            $this->dotenv->load($customEnv);
         }
 
-        $loader = new FilesystemLoader($corePath . 'templates');
+        $loader = new FilesystemLoader($this->corePath . 'templates');
         $this->twig = new Environment($loader, [
-            'cache' => $corePath . 'var/cache/twig',
+            'cache' => $this->corePath . 'var/cache/twig',
             'debug' => $this->debug,
         ]);
     }

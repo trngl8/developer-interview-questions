@@ -8,7 +8,12 @@ use App\Question;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
+
+$corePath = __DIR__.'/';
+$dotenv = new Dotenv();
+$dotenv->load($corePath . '.env');
 
 $core = new Core($_ENV['APP_ENV'], $_ENV['APP_DEBUG']);
 $core->init();
