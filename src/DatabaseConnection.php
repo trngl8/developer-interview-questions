@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Database
+class DatabaseConnection
 {
     private $DB;
 
@@ -11,7 +11,7 @@ class Database
         try {
             $pdoDB = new \PDO($dsn, $username, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         } catch (\PDOException $e) {
-            die($e->getMessage());
+            throw  new \Exception($e->getMessage());
         }
         $this->DB = $pdoDB;
     }

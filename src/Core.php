@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +23,10 @@ class Core
     private Environment $twig;
 
     private Dotenv $dotenv;
+
+    private Response $lastResponse;
+
+    private  $databaseDSN;
 
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
@@ -42,6 +49,8 @@ class Core
             'cache' => $this->corePath . 'var/cache/twig',
             'debug' => $this->debug,
         ]);
+
+        $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
 
     public function run(Request $request, $model): Response
@@ -49,18 +58,43 @@ class Core
         if ($request->getMethod() === 'POST') {
             if(!$request->request->get('question')) {
                 $_SESSION['message'] = 'Question is required';
-                return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+                $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+                return $this->lastResponse;
             }
             $model->addQuestion([
                 'title' => $request->request->get('question'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = 'Question added';
-            return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+            $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+            return $this->lastResponse;
         }
         $records = $model->getQuestions();
         $content = $this->twig->render('index.html.twig', ['questions' => $records]);
-        return new Response($content);
+        $this->lastResponse = new Response($content);
+        return $this->lastResponse;
+    }
+
+    public function getDatabase($dsn = null)
+    {
+        if (!$dsn) {
+            $dsn = $this->databaseDSN;
+        }
+
+        try {
+            $db = DatabaseFactory::create($dsn);
+        } catch (\Exception $e) {
+            $log = new Logger('database');
+            $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
+            $log->pushProcessor(function ($logItem) use ($e) {
+                $logItem->extra['file'] = $e->getFile();
+                return $logItem;
+            });
+            $log->error($e->getMessage(), ['line' => $e->getLine()]);
+            $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => "Database error: {$e->getCode()}"]));
+        }
+
+        return $db;
     }
 
     public function getTemplateEngine(): Environment

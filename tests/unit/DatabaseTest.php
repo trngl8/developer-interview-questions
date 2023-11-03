@@ -39,4 +39,15 @@ class DatabaseTest extends TestCase
         $this->assertCount(3, $records);
     }
 
+    public function testDatabaseErrorType(): void
+    {
+        $this->expectException(\Exception::class);
+        DatabaseFactory::create('error://test');
+    }
+
+    public function testDatabasePostgresType(): void
+    {
+        $this->expectException(\Exception::class);
+        DatabaseFactory::create('postgres://test:123@localhost:5432/test');
+    }
 }

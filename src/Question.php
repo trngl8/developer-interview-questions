@@ -7,7 +7,7 @@ class Question
     private $DB;
     private string $table = 'questions';
 
-    public function __construct(Database $pdoDB)
+    public function __construct(DatabaseConnection $pdoDB)
     {
         $this->DB = $pdoDB;
     }

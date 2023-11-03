@@ -3,11 +3,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Core;
-use App\DatabaseFactory;
 use App\Question;
-use Monolog\Level;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,20 +27,9 @@ if(array_key_exists('message', $_SESSION)) {
     session_destroy();
 }
 
-try {
-    $db = DatabaseFactory::create($_ENV['DATABASE_DSN']);
-    $model = new Question($db);
-} catch (\Exception $e) {
-    $log = new Logger('database');
-    $log->pushHandler(new StreamHandler(__DIR__ . '/var/logs/database.log', Level::Warning));
-    $log->pushProcessor(function ($logItem) use ($e) {
-        $logItem->extra['file'] = $e->getFile();
-        return $logItem;
-    });
-    $log->error($e->getMessage(), ['line' => $e->getLine()]);
-    echo $twig->render('error.html.twig', ['message' => "Database error: {$e->getCode()}"]);
-    exit;
-}
+$db = $core->getDatabase($_ENV['DATABASE_DSN']);
+
+$model = new Question($db);
 
 $response = $core->run($request, $model);
 $response->send();
