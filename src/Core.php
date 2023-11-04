@@ -71,7 +71,7 @@ class Core
                 ->addExtension(new HttpFoundationExtension())
                 ->getFormFactory();
             $form = $formFactory->create();
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if(!$request->request->get('question')) {
                 $_SESSION['message'] = 'Question is required';
