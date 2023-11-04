@@ -3,6 +3,10 @@
 namespace App;
 
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +66,13 @@ class Core
     public function run(Request $request, $model): Response
     {
         if ($request->getMethod() === 'POST') {
+
+            $formFactory = Forms::createFormFactoryBuilder()
+                ->addExtension(new HttpFoundationExtension())
+                ->getFormFactory();
+            $form = $formFactory->create();
+            $form->handleRequest();
+
             if(!$request->request->get('question')) {
                 $_SESSION['message'] = 'Question is required';
                 $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
