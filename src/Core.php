@@ -50,11 +50,21 @@ class Core
             $this->dotenv->load($customEnv);
         }
 
-        $loader = new FilesystemLoader($this->corePath . 'templates');
-        $this->twig = new Environment($loader, [
-            'cache' => $this->corePath . 'var/cache/twig',
-            'debug' => $this->debug,
-        ]);
+        if($_ENV['APP_THEME']) {
+            $loader = new FilesystemLoader($this->corePath . 'twig/themes/' . $_ENV['APP_THEME']);
+            $this->twig = new Environment($loader, [
+                'cache' => $this->corePath . 'var/cache/twig/themes/' . $_ENV['APP_THEME'],
+                'debug' => $this->debug,
+            ]);
+        } else {
+            $loader = new FilesystemLoader($this->corePath . 'templates');
+            $this->twig = new Environment($loader, [
+                'cache' => $this->corePath . 'var/cache/twig',
+                'debug' => $this->debug,
+            ]);
+        }
+
+        //TODO: check root template exists
 
         $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
