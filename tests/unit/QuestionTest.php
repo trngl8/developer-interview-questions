@@ -20,7 +20,7 @@ class QuestionTest extends TestCase
     public function testQuestionsSuccess(): void
     {
         $model = new Question($this->database);
-        $records = $model->getQuestions();
+        $records = $model->getRecords();
         $this->assertGreaterThan(0, count($records));
     }
 
@@ -53,5 +53,12 @@ class QuestionTest extends TestCase
             'created_at' => date('Y-m-d H:i:s'),
         ]);
         $this->assertEquals('It is going on well', $question['answers'][0]['body']);
+    }
+
+    public function testGetItemsSuccess(): void
+    {
+        $model = new Question($this->database);
+        $records = $model->getRecords();
+        $this->assertGreaterThan(1, count($records));
     }
 }

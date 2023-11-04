@@ -6,6 +6,9 @@ class Question extends Model
 {
     protected string $table = 'questions';
 
+    /**
+     * @deprecated Use getRecords() instead
+     */
     public function getQuestions(): array
     {
         if (empty($this->records)) {
@@ -30,7 +33,7 @@ class Question extends Model
         return $data;
     }
 
-    public function addAnswer($question, array $data): int
+    public function addAnswer(&$question, array $data): int
     {
         $data['question_id'] = $question['id'];
         $question['answers'][] = $data;
