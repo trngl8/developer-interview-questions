@@ -1,6 +1,6 @@
 # Developer Interview Questions
 
-### Requirements
+### Requirements:
 - PHP 7.4 or higher
 - php-pdo
 - npm 
@@ -9,7 +9,7 @@
 ### How to install:
 
 1. Clone project into your project directory
-2. Run:
+2. In the project directory run:
 ```commandline
 composer install
 cp .env.example .env
