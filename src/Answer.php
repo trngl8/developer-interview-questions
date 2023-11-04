@@ -2,15 +2,9 @@
 
 namespace App;
 
-class Answer
+class Answer extends Model
 {
-    private $DB;
-    private string $table = 'answers';
-
-    public function __construct(DatabaseConnection $pdoDB)
-    {
-        $this->DB = $pdoDB;
-    }
+    protected string $table = 'answers';
 
     public function getAnswers(): array
     {

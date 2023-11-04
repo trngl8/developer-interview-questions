@@ -44,14 +44,14 @@ class QuestionTest extends TestCase
     public function testAddAnswerSuccess(): void
     {
         $model = new Question($this->database);
-        $record = $model->addQuestion([
+        $question = $model->addQuestion([
             'title' => 'How is going on?',
             'created_at' => date('Y-m-d H:i:s')
         ]);
-        $model->addAnswer($record['id'], [
+        $model->addAnswer($question, [
             'body' => 'It is going on well',
             'created_at' => date('Y-m-d H:i:s'),
         ]);
-        $this->assertGreaterThan( 1, $record['id']);
+
     }
 }

@@ -2,18 +2,9 @@
 
 namespace App;
 
-class Question
+class Question extends Model
 {
-    private $DB;
-    private string $table = 'questions';
-
-    private array $records;
-
-    public function __construct(DatabaseConnection $pdoDB)
-    {
-        $this->DB = $pdoDB;
-        $this->records = [];
-    }
+    protected string $table = 'questions';
 
     public function getQuestions(): array
     {
@@ -39,12 +30,11 @@ class Question
         return $data;
     }
 
-    public function addAnswer(int $questionId, array $data): int
+    public function addAnswer($question, array $data): int
     {
-        $question = $this->getQuestion($questionId);
-        $data['question_id'] = $questionId;
+        $data['question_id'] = $question['id'];
         $question['answers'][] = $data;
-        $this->records[$questionId] = $question;
+        $this->records[$question['id']] = $question;
         return $this->DB->addRecord('answers', $data);
     }
 
