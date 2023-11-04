@@ -50,7 +50,10 @@ class Core
             $this->dotenv->load($customEnv);
         }
 
-        if($_ENV['APP_THEME']) {
+        if(isset($_ENV['APP_THEME'])) {
+            if (!file_exists($this->corePath . 'twig/themes/' . $_ENV['APP_THEME'])) {
+                throw new \Exception(sprintf('Theme %s not found', $_ENV['APP_THEME']));
+            }
             $loader = new FilesystemLoader($this->corePath . 'twig/themes/' . $_ENV['APP_THEME']);
             $this->twig = new Environment($loader, [
                 'cache' => $this->corePath . 'var/cache/twig/themes/' . $_ENV['APP_THEME'],
