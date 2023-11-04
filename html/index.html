@@ -200,6 +200,30 @@ $db->saveData('Sample data');
                     </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                        What is an interface?
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#collapseSix">
+                    <div class="accordion-body">
+                        <p>Interface is a programming structure/syntax that allows the computer to enforce certain properties on an object (class).</p>
+                        <p>For example, say we have a car class and a scooter class and a truck class. Each of these three classes should have a start_engine() action.
+                        How the engine is started varies from vehicle to vehicle, but the fact that the vehicle has an engine is consistent.
+                        So instead of defining the start_engine() action individually for each vehicle class, we can define an interface that each vehicle class must adhere to.
+                        This interface can then be used as a type declaration for whatever variable we use to store our vehicle object.
+                        This ensures that we can only call start_engine() on a vehicle object, regardless of whether it's a car, scooter, or truck.
+                        </p>
+                        <a href="#" class="btn btn-outline-success">
+                            Agree
+                        </a>
+                        <a href="#" class="btn btn-outline-danger">
+                            Not agree
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <h4 class="mb-2">Add question</h4>
