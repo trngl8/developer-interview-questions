@@ -2,7 +2,7 @@
 
 namespace App;
 
-abstract class DatabaseConnection
+abstract class DatabaseConnection implements RecordsInterface
 {
     protected $DB;
 
