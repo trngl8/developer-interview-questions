@@ -3,11 +3,12 @@
 namespace App\Tests\Unit;
 
 use App\DatabaseFactory;
+use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    private $database;
+    private RecordsInterface $database;
 
     public function setUp(): void {
         parent::setUp();
