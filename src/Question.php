@@ -16,7 +16,7 @@ class Question extends Model
 
     public function getQuestion(int $id): array
     {
-        if(array_key_exists($id, $this->records)) {
+        if(!array_key_exists($id, $this->records)) {
             $this->records[$id] = $this->DB->getRecord($this->table, $id);
         }
         return $this->records[$id];

@@ -52,6 +52,6 @@ class QuestionTest extends TestCase
             'body' => 'It is going on well',
             'created_at' => date('Y-m-d H:i:s'),
         ]);
-
+        $this->assertEquals('It is going on well', $question['answers'][0]['body']);
     }
 }
