@@ -2,19 +2,9 @@
 
 namespace App;
 
-class Database
+abstract class DatabaseConnection
 {
-    private $DB;
-
-    public function __construct(string $dsn, ?string $username=null, ?string $password=null)
-    {
-        try {
-            $pdoDB = new \PDO($dsn, $username, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-        } catch (\PDOException $e) {
-            die($e->getMessage());
-        }
-        $this->DB = $pdoDB;
-    }
+    protected $DB;
 
     public function getRecords(string $table): array
     {
@@ -45,9 +35,9 @@ class Database
         return $this->DB->lastInsertId();
     }
 
-    public function removeRecord(int $id): void
+    public function removeRecord(string $table, int $id): void
     {
-        $sql = sprintf("DELETE FROM questions WHERE id=%d", $id);
+        $sql = sprintf("DELETE FROM %s WHERE id=%d", $table, $id);
         $stmt = $this->DB->prepare($sql);
         $stmt->execute();
     }

@@ -21,13 +21,26 @@ class Core
 
     private Dotenv $dotenv;
 
+    private Response $lastResponse;
+
+    private  $databaseDSN;
+
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
         $this->dotenv = new Dotenv();
-        $this->corePath = __DIR__.'/../';
-        $this->dotenv->load($this->corePath . '.env');
+
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
+        $r = new \ReflectionObject($this);
+        $dir = $rootDir = \dirname($r->getFileName());
+        while (!is_file($dir.'/composer.json')) {
+            if ($dir === \dirname($dir)) {
+                $dir = $rootDir;
+            }
+            $dir = \dirname($dir);
+        }
+        $this->corePath = $dir . '/';
+        $this->dotenv->load($this->corePath . '.env');
     }
 
     public function init(): void
@@ -42,6 +55,8 @@ class Core
             'cache' => $this->corePath . 'var/cache/twig',
             'debug' => $this->debug,
         ]);
+
+        $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
 
     public function run(Request $request, $model): Response
@@ -49,18 +64,48 @@ class Core
         if ($request->getMethod() === 'POST') {
             if(!$request->request->get('question')) {
                 $_SESSION['message'] = 'Question is required';
-                return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+                $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+                return $this->lastResponse;
             }
             $model->addQuestion([
                 'title' => $request->request->get('question'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = 'Question added';
-            return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+            $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
+            return $this->lastResponse;
         }
         $records = $model->getQuestions();
         $content = $this->twig->render('index.html.twig', ['questions' => $records]);
-        return new Response($content);
+        $this->lastResponse = new Response($content);
+        return $this->lastResponse;
+    }
+
+    public function getDatabase($dsn = null)
+    {
+        if (!$dsn) {
+            $dsn = $this->databaseDSN;
+        }
+
+        $dsn = str_replace('%kernel.project_directory%', $this->corePath, $dsn);
+        try {
+            $db = DatabaseFactory::create($dsn);
+        } catch (\Exception $e) {
+           throw new \Exception($e->getMessage());
+        }
+
+        return $db;
+    }
+
+    public function getRootDir(): string
+    {
+        return $this->corePath;
+    }
+
+    public function getExceptionResponse(): Response
+    {
+        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'General error']));
+        return $this->lastResponse;
     }
 
     public function getTemplateEngine(): Environment
