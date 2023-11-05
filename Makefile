@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 serve:
-	php -S localhost:8000 -t
+	php -S localhost:8000
 .PHONY: serve
 
 tests:
