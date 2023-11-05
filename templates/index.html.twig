@@ -16,7 +16,17 @@
 
 <div class="container">
     {% if message is defined %}
-        <p><b>{{ message }}</b></p>
+        {% if message.type == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message.title }}
+        </div>
+        {% endif %}
+
+        {% if message.type == 'success' %}
+            <div class="alert alert-success" role="alert">
+                {{ message.title }}
+            </div>
+        {% endif %}
     {% endif %}
 </div>
 

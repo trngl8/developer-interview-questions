@@ -76,7 +76,10 @@ class Core
         if ($form->isSubmitted() && $request->getMethod() === 'POST') {
             $data = $form->getData();
             if(!$data['title']) {
-                $_SESSION['message'] = 'Question is required';
+                $_SESSION['message'] = [
+                    'title' => 'Question title is required',
+                    'type' => 'error',
+                ];
                 $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
                 return $this->lastResponse;
             }
@@ -84,7 +87,10 @@ class Core
                 'title' => $data['title'],
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
-            $_SESSION['message'] = 'Question added';
+            $_SESSION['message'] = [
+                'title' => 'Question added',
+                'type' => 'success',
+            ];
             $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
             return $this->lastResponse;
         }
