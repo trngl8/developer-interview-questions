@@ -3,11 +3,12 @@
 namespace App\Tests\Unit;
 
 use App\DatabaseFactory;
+use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    private $database;
+    private RecordsInterface $database;
 
     public function setUp(): void {
         parent::setUp();
@@ -18,6 +19,12 @@ class DatabaseTest extends TestCase
     {
         $records = $this->database->getRecords('questions');
         $this->assertCount(3, $records);
+    }
+
+    public function testDatabaseRecordsLimit(): void
+    {
+        $records = $this->database->getRecords('questions', 2);
+        $this->assertCount(2, $records);
     }
 
     public function testDatabaseRecord(): void

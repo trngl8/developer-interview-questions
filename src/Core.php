@@ -62,7 +62,7 @@ class Core
         $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
 
-    public function run(Request $request, $model): Response
+    public function run(Request $request, Model $model): Response
     {
         $formFactory = Forms::createFormFactoryBuilder()
             ->addExtension(new HttpFoundationExtension())
