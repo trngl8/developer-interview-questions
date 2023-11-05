@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Form\NewQuestionType;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\HttpFoundation\Type\FormTypeHttpFoundationExtension;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Forms;
@@ -65,29 +67,34 @@ class Core
 
     public function run(Request $request, $model): Response
     {
-        if ($request->getMethod() === 'POST') {
+        $formFactory = Forms::createFormFactoryBuilder()
+            ->addExtension(new HttpFoundationExtension())
+            ->getFormFactory();
+        $form = $formFactory->create(NewQuestionType::class);
+        $form->handleRequest($request);
 
-            $formFactory = Forms::createFormFactoryBuilder()
-                ->addExtension(new HttpFoundationExtension())
-                ->getFormFactory();
-            $form = $formFactory->create();
-            $form->handleRequest($request);
-
-            if(!$request->request->get('question')) {
+        if ($form->isSubmitted() && $request->getMethod() === 'POST') {
+            $data = $form->getData();
+            if(!$data['title']) {
                 $_SESSION['message'] = 'Question is required';
                 $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
                 return $this->lastResponse;
             }
             $model->addQuestion([
-                'title' => $request->request->get('question'),
+                'title' => $data['title'],
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = 'Question added';
             $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
             return $this->lastResponse;
         }
+
         $records = $model->getQuestions();
-        $content = $this->twig->render('index.html.twig', ['questions' => $records]);
+        $content = $this->twig->render('index.html.twig', [
+            'questions' => $records,
+            'form' => $form->createView(),
+        ]);
+
         $this->lastResponse = new Response($content);
         return $this->lastResponse;
     }
