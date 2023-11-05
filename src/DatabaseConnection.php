@@ -9,7 +9,7 @@ abstract class DatabaseConnection implements RecordsInterface
     public function getRecords(string $table, int $limit=0, array $order=[]): array
     {
         $sql = sprintf("SELECT * FROM %s", $table);
-        if($limit) {
+        if ($limit > 0) {
             $sql .= sprintf(" LIMIT %d", $limit);
         }
         $stmt = $this->DB->prepare($sql);
