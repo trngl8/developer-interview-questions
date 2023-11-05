@@ -72,7 +72,7 @@ class Core
 
         if ($form->isSubmitted() && $request->getMethod() === 'POST') {
             $data = $form->getData();
-            if(!$data['title']) {
+            if(!$data->title) {
                 $_SESSION['message'] = [
                     'title' => 'Question title is required',
                     'type' => 'error',
@@ -81,7 +81,7 @@ class Core
                 return $this->lastResponse;
             }
             $model->addQuestion([
-                'title' => $data['title'],
+                'title' => $data->title,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = [
