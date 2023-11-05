@@ -92,7 +92,7 @@ class Core
             return $this->lastResponse;
         }
 
-        $records = $model->getQuestions();
+        $records = $model->getRecords();
         $content = $this->twig->render('index.html.twig', [
             'questions' => $records,
             'form' => $form->createView(),
