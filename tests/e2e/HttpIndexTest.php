@@ -25,7 +25,7 @@ class HttpIndexTest extends TestCase
 
     public function testIndexPostSuccess(): void
     {
-        $response = $this->httpClient->request('POST', 'http://localhost:8000', ['body' => ['question' => 'What is the day today?']]);
+        $response = $this->httpClient->request('POST', 'http://localhost:8000', ['body' => ['title' => 'What is the day today?']]);
         $result = $response->getStatusCode();
         $this->assertEquals(200, $result);
     }

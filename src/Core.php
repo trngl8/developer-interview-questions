@@ -71,8 +71,9 @@ class Core
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $request->getMethod() === 'POST') {
+
             $data = $form->getData();
-            if(!$data['title']) {
+            if(!$data->title) {
                 $_SESSION['message'] = [
                     'title' => 'Question title is required',
                     'type' => 'error',
@@ -80,8 +81,9 @@ class Core
                 $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
                 return $this->lastResponse;
             }
+
             $model->addQuestion([
-                'title' => $data['title'],
+                'title' => $data->title,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $_SESSION['message'] = [
