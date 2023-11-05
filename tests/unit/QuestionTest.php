@@ -27,7 +27,7 @@ class QuestionTest extends TestCase
     public function testQuestionSuccess(): void
     {
         $model = new Question($this->database);
-        $record = $model->getQuestion(1);
+        $record = $model->getRecord(1);
         $this->assertEquals('What is an abstract class?', $record['title']);
     }
 

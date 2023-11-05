@@ -21,6 +21,12 @@ class DatabaseTest extends TestCase
         $this->assertCount(3, $records);
     }
 
+    public function testDatabaseRecordsLimit(): void
+    {
+        $records = $this->database->getRecords('questions', 2);
+        $this->assertCount(2, $records);
+    }
+
     public function testDatabaseRecord(): void
     {
         $record = $this->database->getRecord('questions', 1);
