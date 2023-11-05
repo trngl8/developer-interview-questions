@@ -24,7 +24,7 @@ class DatabaseTest extends TestCase
     public function testDatabaseRecord(): void
     {
         $record = $this->database->getRecord('questions', 1);
-        $this->assertEquals('What is an abstract class?', $record['body']);
+        $this->assertEquals('What is an abstract class?', $record['title']);
     }
 
     public function testDatabaseAddRecord(): void
