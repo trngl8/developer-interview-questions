@@ -16,7 +16,17 @@
 
 <div class="container">
     {% if message is defined %}
-        <p><b>{{ message }}</b></p>
+        {% if message.type == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message.title }}
+        </div>
+        {% endif %}
+
+        {% if message.type == 'success' %}
+            <div class="alert alert-success" role="alert">
+                {{ message.title }}
+            </div>
+        {% endif %}
     {% endif %}
 </div>
 
@@ -32,13 +42,16 @@
     </div>
 
     <h3 class="mb-2">Your question</h3>
-    <form method="post">
-        <label for="username" class="form-label mt-2">Your name:</label>
-        <input type="text" class="form-control mt-2" name="username" id="username" />
-        <label for="question" class="form-label mt-2">Your question:</label>
-        <textarea name="question" class="form-control mt-2" id="question"></textarea>
+    {% if form is defined %}
+    <form method="post" id="{{ form.vars.id }}">
+        {% for input in form.children %}
+        <label for="{{ input.vars.id }}" class="form-label mt-2">{{ input.vars.name }}:</label>
+        <input type="text" class="form-control mt-2" name="{{ input.vars.full_name }}" id="{{ input.vars.id }}" />
+        {% endfor %}
+
         <input type="submit" class="btn btn-primary mt-4" value="Submit" />
     </form>
+    {% endif %}
 
     </div>
     <script src="../dist/main.js"></script>
