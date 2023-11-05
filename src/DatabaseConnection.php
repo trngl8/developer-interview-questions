@@ -6,20 +6,19 @@ abstract class DatabaseConnection implements RecordsInterface
 {
     protected $DB;
 
-    public function getRecords(string $table): array
+    public function getRecords(string $table, int $limit=0, array $order=[]): array
     {
         $sql = sprintf("SELECT * FROM %s", $table);
-        $stmt = $this->DB->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        if ($limit > 0) {
+            $sql .= sprintf(" LIMIT %d", $limit);
+        }
+        return $this->getArrayResult($sql);
     }
 
     public function getRecord(string $table, int $id): array
     {
         $sql = sprintf("SELECT * FROM %s WHERE id=%d", $table, $id);
-        $stmt = $this->DB->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $this->getArrayResult($sql)[0];
     }
 
     public function addRecord(string $table, array $data): int
@@ -42,4 +41,10 @@ abstract class DatabaseConnection implements RecordsInterface
         $stmt->execute();
     }
 
+    private function getArrayResult(string $sql): array
+    {
+        $stmt = $this->DB->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

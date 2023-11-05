@@ -59,7 +59,7 @@ class Core
         $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
 
-    public function run(Request $request, $model): Response
+    public function run(Request $request, Model $model): Response
     {
         if ($request->getMethod() === 'POST') {
             if(!$request->request->get('question')) {
@@ -75,7 +75,7 @@ class Core
             $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
             return $this->lastResponse;
         }
-        $records = $model->getQuestions();
+        $records = $model->getRecords();
         $content = $this->twig->render('index.html.twig', ['questions' => $records]);
         $this->lastResponse = new Response($content);
         return $this->lastResponse;
