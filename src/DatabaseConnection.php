@@ -6,9 +6,12 @@ abstract class DatabaseConnection implements RecordsInterface
 {
     protected $DB;
 
-    public function getRecords(string $table, int $limit=10, array $order=[]): array
+    public function getRecords(string $table, int $limit=0, array $order=[]): array
     {
-        $sql = sprintf("SELECT * FROM %s LIMIT %d", $table, $limit);
+        $sql = sprintf("SELECT * FROM %s", $table);
+        if($limit) {
+            $sql .= sprintf(" LIMIT %d", $limit);
+        }
         $stmt = $this->DB->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
