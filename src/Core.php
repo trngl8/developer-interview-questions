@@ -71,6 +71,7 @@ class Core
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $request->getMethod() === 'POST') {
+
             $data = $form->getData();
             if(!$data->title) {
                 $_SESSION['message'] = [
@@ -80,6 +81,7 @@ class Core
                 $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
                 return $this->lastResponse;
             }
+
             $model->addQuestion([
                 'title' => $data->title,
                 'created_at' => date('Y-m-d H:i:s'),

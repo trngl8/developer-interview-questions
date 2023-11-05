@@ -70,7 +70,7 @@ class CoreTest extends TestCase
         $request = Request::create(
             '/',
             'POST',
-            ['question' => 'test version?']
+            ['title' => 'test version?']
         );
         $model = new Question($database);
         $result = $core->run($request, $model);
