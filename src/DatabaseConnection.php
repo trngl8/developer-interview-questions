@@ -10,9 +10,6 @@ abstract class DatabaseConnection implements RecordsInterface
     {
         $sql = '';
         $addSelect = [];
-        if ($limit > 0) {
-            $sql .= sprintf(" LIMIT %d", $limit);
-        }
         if (!empty($order)) {
             $sql .= sprintf(" ORDER BY %s", implode(',', $order));
         }
@@ -20,7 +17,11 @@ abstract class DatabaseConnection implements RecordsInterface
             $sql .= sprintf(" WHERE %s", implode(' AND ', $where));
         }
         if (!empty($having)) {
+            $addSelect = [', COUNT(*) AS c'];
             $sql .= sprintf(" HAVING %s", implode(' AND ', $having));
+        }
+        if ($limit > 0) {
+            $sql .= sprintf(" LIMIT %d", $limit);
         }
         $sqlSelect = sprintf("SELECT * %s FROM %s %s", implode(' , ', $addSelect), $table, $sql);
         return $this->getArrayResult($sqlSelect);
