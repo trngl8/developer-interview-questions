@@ -18,7 +18,7 @@ abstract class DatabaseConnection implements RecordsInterface
         }
         if (!empty($having)) {
             $addSelect = [', COUNT(*) AS c'];
-            $sql .= sprintf(" HAVING %s", implode(' AND ', $having));
+            $sql .= sprintf(" group by id HAVING %s", implode(' AND ', $having));
         }
         if ($limit > 0) {
             $sql .= sprintf(" LIMIT %d", $limit);
