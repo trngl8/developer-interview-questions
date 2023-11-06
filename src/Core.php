@@ -111,4 +111,9 @@ class Core
     {
         return $this->twig;
     }
+
+    public function getLastResponse(): Response
+    {
+        return $this->lastResponse;
+    }
 }
