@@ -31,6 +31,7 @@ if(array_key_exists('message', $_SESSION)) {
 
 try {
     $core->run($request);
+    $response = $core->getLastResponse();
 } catch (Exception $e) {
     $log = new Logger('app');
     $log->pushHandler(new StreamHandler($core->getRootDir() . 'var/logs/app.log', Level::Warning));
@@ -41,3 +42,5 @@ try {
     $log->error($e->getMessage(), ['line' => $e->getLine()]);
     $response = $core->getExceptionResponse();
 }
+
+$response->send();

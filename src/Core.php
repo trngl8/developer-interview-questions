@@ -77,7 +77,6 @@ class Core
             default:
                 $this->lastResponse = new Response('Not found', Response::HTTP_NOT_FOUND);
         }
-        $this->lastResponse->send();
     }
 
     public function getDatabase($dsn = null)
