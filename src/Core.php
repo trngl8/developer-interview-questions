@@ -2,11 +2,9 @@
 
 namespace App;
 
-use App\Form\NewQuestionType;
+use App\Controller\IndexController;
+use App\Exception\DatabaseException;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Loader\FilesystemLoader;
@@ -62,46 +60,24 @@ class Core
         $this->databaseDSN = $_ENV['DATABASE_DSN'];
     }
 
-    public function run(Request $request, Model $model): Response
+    public function run(Request $request): void
     {
-        $formFactory = Forms::createFormFactoryBuilder()
-            ->addExtension(new HttpFoundationExtension())
-            ->getFormFactory();
-        $form = $formFactory->create(NewQuestionType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $request->getMethod() === 'POST') {
-
-            $data = $form->getData();
-            if(!$data->title) {
-                $_SESSION['message'] = [
-                    'title' => 'Question title is required',
-                    'type' => 'error',
-                ];
-                $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
-                return $this->lastResponse;
-            }
-
-            $model->addQuestion([
-                'title' => $data->title,
-                'created_at' => date('Y-m-d H:i:s'),
-            ]);
-            $_SESSION['message'] = [
-                'title' => 'Question added',
-                'type' => 'success',
-            ];
-            $this->lastResponse = new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
-            return $this->lastResponse;
+        try {
+            $db = $this->getDatabase($_ENV['DATABASE_DSN']);
+            $model = new Question($db);
+        } catch (\PDOException $e) {
+            throw new \Exception($e->getMessage());
         }
 
-        $records = $model->getRecords();
-        $content = $this->twig->render('index.html.twig', [
-            'questions' => $records,
-            'form' => $form->createView(),
-        ]);
-
-        $this->lastResponse = new Response($content);
-        return $this->lastResponse;
+        $path = $request->getPathInfo();
+        switch ($path) {
+            case '/':
+                $this->lastResponse = (new IndexController($this->twig))->index($request, $model);
+                break;
+            default:
+                $this->lastResponse = new Response('Not found', Response::HTTP_NOT_FOUND);
+        }
+        $this->lastResponse->send();
     }
 
     public function getDatabase($dsn = null)
@@ -114,7 +90,7 @@ class Core
         try {
             $db = DatabaseFactory::create($dsn);
         } catch (\Exception $e) {
-           throw new \Exception($e->getMessage());
+           throw new DatabaseException($e->getMessage());
         }
 
         return $db;
@@ -134,5 +110,10 @@ class Core
     public function getTemplateEngine(): Environment
     {
         return $this->twig;
+    }
+
+    public function getLastResponse(): Response
+    {
+        return $this->lastResponse;
     }
 }

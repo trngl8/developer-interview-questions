@@ -4,7 +4,6 @@ namespace App\Tests\Unit;
 
 use App\Core;
 use App\DatabaseConnection;
-use App\Question;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,9 +42,8 @@ class CoreTest extends TestCase
         $request = Request::create(
             '/'
         );
-        $model = new Question($database);
-        $result = $core->run($request, $model);
-        $this->assertTrue((bool)$result);
+        $core->run($request);
+        $this->assertTrue((bool)$core->getLastResponse());
     }
 
     public function testCoreEmptyPostRun(): void
@@ -57,9 +55,8 @@ class CoreTest extends TestCase
             '/',
             'POST'
         );
-        $model = new Question($database);
-        $result = $core->run($request, $model);
-        $this->assertTrue((bool)$result);
+        $core->run($request);
+        $this->assertTrue((bool)$core->getLastResponse());
     }
 
     public function testCorePostRun(): void
@@ -72,9 +69,8 @@ class CoreTest extends TestCase
             'POST',
             ['title' => 'test version?']
         );
-        $model = new Question($database);
-        $result = $core->run($request, $model);
-        $this->assertTrue((bool)$result);
+        $core->run($request);
+        $this->assertTrue((bool)$core->getLastResponse());
     }
 
     public function testGetExceptionResponse(): void

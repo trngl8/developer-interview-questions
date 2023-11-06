@@ -3,7 +3,6 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Core;
-use App\Question;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -31,12 +30,10 @@ if(array_key_exists('message', $_SESSION)) {
 }
 
 try {
-    $db = $core->getDatabase($_ENV['DATABASE_DSN']);
-    $model = new Question($db);
-    $response = $core->run($request, $model);
+    $core->run($request);
 } catch (Exception $e) {
-    $log = new Logger('database');
-    $log->pushHandler(new StreamHandler($core->getRootDir() . 'var/logs/database.log', Level::Warning));
+    $log = new Logger('app');
+    $log->pushHandler(new StreamHandler($core->getRootDir() . 'var/logs/app.log', Level::Warning));
     $log->pushProcessor(function ($logItem) use ($e) {
         $logItem->extra['file'] = $e->getFile();
         return $logItem;
@@ -44,5 +41,3 @@ try {
     $log->error($e->getMessage(), ['line' => $e->getLine()]);
     $response = $core->getExceptionResponse();
 }
-
-$response->send();
