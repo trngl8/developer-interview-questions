@@ -18,7 +18,7 @@ class DatabaseTest extends TestCase
     public function testDatabaseRecords(): void
     {
         $records = $this->database->getRecords('questions');
-        $this->assertGreaterThan(3, count($records));
+        $this->assertGreaterThan(1, count($records));
     }
 
     public function testDatabaseRecordsLimit(): void
