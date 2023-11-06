@@ -4,15 +4,27 @@ namespace App;
 
 abstract class DatabaseConnection implements RecordsInterface
 {
-    protected $DB;
+    protected \PDO $DB;
 
-    public function getRecords(string $table, int $limit=0, array $order=[]): array
+    public function getRecords(string $table, int $limit=0, array $order=[], array $where=[], array $having=[]): array
     {
-        $sql = sprintf("SELECT * FROM %s", $table);
+        $sql = '';
+        $addSelect = [];
+        if (!empty($order)) {
+            $sql .= sprintf(" ORDER BY %s", implode(',', $order));
+        }
+        if (!empty($where)) {
+            $sql .= sprintf(" WHERE %s", implode(' AND ', $where));
+        }
+        if (!empty($having)) {
+            $addSelect = [', COUNT(*) AS c'];
+            $sql .= sprintf(" group by id HAVING %s", implode(' AND ', $having));
+        }
         if ($limit > 0) {
             $sql .= sprintf(" LIMIT %d", $limit);
         }
-        return $this->getArrayResult($sql);
+        $sqlSelect = sprintf("SELECT * %s FROM %s %s", implode(' , ', $addSelect), $table, $sql);
+        return $this->getArrayResult($sqlSelect);
     }
 
     public function getRecord(string $table, int $id): array
