@@ -26,5 +26,5 @@ php -S localhost:8000
 ### How to run tests:
 
 ```commandline
-php /vendor/bin/phpunit tests
+php ./vendor/bin/phpunit tests
 ```
