@@ -4,11 +4,7 @@ namespace App;
 
 use App\Controller\IndexController;
 use App\Exception\DatabaseException;
-use App\Form\NewQuestionType;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Loader\FilesystemLoader;
