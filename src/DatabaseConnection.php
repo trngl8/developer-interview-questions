@@ -53,7 +53,7 @@ abstract class DatabaseConnection implements RecordsInterface
         $stmt->execute();
     }
 
-    private function getArrayResult(string $sql): array
+    public function getArrayResult(string $sql): array
     {
         $stmt = $this->DB->prepare($sql);
         $stmt->execute();
