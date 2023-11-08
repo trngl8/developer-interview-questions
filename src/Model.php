@@ -18,10 +18,11 @@ abstract class Model
         $this->limit = 0;
     }
 
-    public function getRecords(): array
+    public function getRecords(Query $query): array
     {
         if (empty($this->records)) {
-            $this->records = $this->DB->getRecords($this->table, $this->limit, $this->order);
+            $sql = $query->getSql();
+            $this->records = $this->DB->getArrayResult($sql);
         }
         return $this->records;
     }
@@ -33,4 +34,10 @@ abstract class Model
         }
         return $this->records[$id];
     }
+
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
 }

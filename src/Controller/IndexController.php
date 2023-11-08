@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\NewQuestionType;
 use App\Model;
+use App\Query;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,7 +50,9 @@ class IndexController
             return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
         }
 
-        $records = $model->getRecords();
+        $query = new Query($model->getTable());
+        $query->select(['id', 'title', 'created_at', 'AVG(answers.rate) as answers_rate']);
+        $records = $model->getRecords($query);
         $content = $this->twig->render('index.html.twig', [
             'questions' => $records,
             'form' => $form->createView(),
