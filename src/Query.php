@@ -11,10 +11,14 @@ class Query
     public function __construct(string $table)
     {
         $this->table = $table;
+        $this->sql = '';
     }
 
-    public function select(array $columns): self
+    public function select(array $columns=[]): self
     {
+        if (empty($columns)) {
+            $columns = ['*'];
+        }
         $this->sql = sprintf("SELECT %s FROM %s", implode(',', $columns), $this->table);
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\DatabaseFactory;
+use App\Query;
 use App\Question;
 use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,8 @@ class QuestionTest extends TestCase
     public function testQuestionsSuccess(): void
     {
         $model = new Question($this->database);
-        $records = $model->getRecords();
+        $query = new Query($model->getTable());
+        $records = $model->getRecords($query);
         $this->assertGreaterThan(0, count($records));
     }
 
@@ -58,7 +60,8 @@ class QuestionTest extends TestCase
     public function testGetItemsSuccess(): void
     {
         $model = new Question($this->database);
-        $records = $model->getRecords();
+        $query = new Query($model->getTable());
+        $records = $model->getRecords($query);
         $this->assertGreaterThan(1, count($records));
     }
 }

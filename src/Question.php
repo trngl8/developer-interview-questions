@@ -6,6 +6,12 @@ class Question extends Model
 {
     protected string $table = 'questions';
 
+    public function getRecords(Query $query): array
+    {
+        $query->select();
+        return parent::getRecords($query);
+    }
+
     public function addQuestion(array $data): array
     {
         $id = $this->DB->addRecord($this->table, $data);
