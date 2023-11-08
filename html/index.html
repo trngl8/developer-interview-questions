@@ -226,16 +226,40 @@ $db->saveData('Sample data');
             </div>
         </div>
     </div>
-    <h4 class="mb-2">Add question</h4>
 
-    <form class="form" method="post">
-        <label for="username" class="form-label mt-2">Username:</label>
-        <input type="text" class="form-control mt-2" id="username" />
-        <label for="question" class="form-label mt-2">Your question:</label>
-        <textarea class="form-control" id="question"></textarea>
-    </form>
+    <h3 class="mb-4">List records</h3>
+    <div class="list-group mb-5">
+        <a href="#" class="list-group-item list-group-item-action">
+            What is an abstract class?
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            Have PHP language support multiple inheritance?
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            Why we use traits in PHP?
+        </a>
+    </div>
 
-    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    <h3 class="mb-4">Card</h3>
+    <div class="card mb-5">
+        <div class="card-body">
+            What is an abstract class?
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <h4 class="mb-2">Add question</h4>
+        <form class="form" method="post">
+            <label for="username" class="form-label mt-2">Username:</label>
+            <input type="text" class="form-control mt-2" id="username" />
+            <label for="question" class="form-label mt-2">Your question:</label>
+            <textarea class="form-control" id="question"></textarea>
+        </form>
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    </div>
+
+    <div class="mt-5">&nbsp;</div>
+
 </main>
 
 <script src="../dist/main.js"></script>
