@@ -5,6 +5,7 @@ namespace App;
 use App\Controller\IndexController;
 use App\Database\DatabaseFactory;
 use App\Exception\DatabaseException;
+use App\Model\Question;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

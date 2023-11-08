@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Database\Query;
 use App\Form\NewQuestionType;
-use App\Model;
+use App\Model\AbstractModel;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +20,7 @@ class IndexController
         $this->twig = $twig;
     }
 
-    public function index(Request $request, Model $model)
+    public function index(Request $request, AbstractModel $model)
     {
         $formFactory = Forms::createFormFactoryBuilder()
             ->addExtension(new HttpFoundationExtension())

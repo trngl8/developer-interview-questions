@@ -2,13 +2,13 @@
 
 namespace App\Tests\Unit;
 
+use App\Database\ChangeRecordsInterface;
 use App\Database\DatabaseFactory;
-use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    private RecordsInterface $database;
+    private ChangeRecordsInterface $database;
 
     public function setUp(): void {
         parent::setUp();

@@ -2,14 +2,14 @@
 
 namespace App\Tests\Unit;
 
-use App\Answer;
+use App\Database\ChangeRecordsInterface;
 use App\Database\DatabaseFactory;
-use App\RecordsInterface;
+use App\Model\Answer;
 use PHPUnit\Framework\TestCase;
 
 class AnswerTest extends TestCase
 {
-    private RecordsInterface $database;
+    private ChangeRecordsInterface $database;
 
     public function setUp(): void
     {

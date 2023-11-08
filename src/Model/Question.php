@@ -1,10 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
-use App\Database\Query;
-
-class Question extends Model
+class Question extends AbstractModel
 {
     protected string $table = 'questions';
 

@@ -1,16 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
+use App\Database\ChangeRecordsInterface;
 use App\Database\Query;
 
-abstract class Model
+abstract class AbstractModel
 {
     protected array $records;
     protected string $table;
-    protected RecordsInterface $DB;
+    protected ChangeRecordsInterface $DB;
 
-    public function __construct(RecordsInterface $pdoDB)
+    public function __construct(ChangeRecordsInterface $pdoDB)
     {
         $this->DB = $pdoDB;
         $this->records = [];

@@ -2,9 +2,7 @@
 
 namespace App\Database;
 
-use App\RecordsInterface;
-
-abstract class DatabaseConnection implements RecordsInterface
+abstract class DatabaseConnection implements ChangeRecordsInterface
 {
     protected \PDO $DB;
 

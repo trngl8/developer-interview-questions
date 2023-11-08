@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
-class Answer extends Model
+class Answer extends AbstractModel
 {
     protected string $table = 'answers';
 
