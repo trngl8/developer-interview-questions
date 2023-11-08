@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit;
 
-use App\DatabaseFactory;
-use App\Query;
+use App\Database\DatabaseFactory;
+use App\Database\Query;
 use App\Question;
 use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;

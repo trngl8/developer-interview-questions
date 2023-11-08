@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Database\Query;
+
 abstract class Model
 {
     protected array $records;

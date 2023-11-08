@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Database;
+
+use App\RecordsInterface;
 
 abstract class DatabaseConnection implements RecordsInterface
 {

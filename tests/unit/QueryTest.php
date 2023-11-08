@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit;
 
-use App\Query;
+use App\Database\Query;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase

@@ -3,7 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\Answer;
-use App\DatabaseFactory;
+use App\Database\DatabaseFactory;
 use App\RecordsInterface;
 use PHPUnit\Framework\TestCase;
 

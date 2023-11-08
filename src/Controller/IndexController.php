@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Database\Query;
 use App\Form\NewQuestionType;
 use App\Model;
-use App\Query;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Database\Query;
+
 class Question extends Model
 {
     protected string $table = 'questions';
