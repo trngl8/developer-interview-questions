@@ -2,6 +2,8 @@
 
 namespace App\Database;
 
+use App\Exception\DatabaseException;
+
 class DatabaseFactory
 {
     public static function create(string $dsn): DatabaseConnection
@@ -21,7 +23,7 @@ class DatabaseFactory
             case 'sqlite':
                 return new SqliteDatabaseConnection(sprintf("sqlite://%s", $path));
             default:
-                throw new \Exception(sprintf('Unsupported database type: %s', $type));
+                throw new DatabaseException(sprintf('Unsupported database type: %s', $type));
         }
     }
 }
