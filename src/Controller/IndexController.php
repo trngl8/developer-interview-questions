@@ -15,6 +15,7 @@ use Twig\Environment;
 class IndexController
 {
     private Environment $twig;
+
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;
@@ -50,9 +51,7 @@ class IndexController
             return new RedirectResponse('/', Response::HTTP_MOVED_PERMANENTLY);
         }
 
-        $query = new Query($model->getTable());
-        $query->select(['id', 'title', 'created_at', 'AVG(answers.rate) as answers_rate']);
-        $records = $model->getRecords($query);
+        $records = $model->getRecords();
         $content = $this->twig->render('index.html.twig', [
             'questions' => $records,
             'form' => $form->createView(),

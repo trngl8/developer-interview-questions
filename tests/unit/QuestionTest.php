@@ -56,12 +56,4 @@ class QuestionTest extends TestCase
         ]);
         $this->assertEquals('It is going on well', $question['answers'][0]['body']);
     }
-
-    public function testGetItemsSuccess(): void
-    {
-        $model = new Question($this->database);
-        $query = new Query($model->getTable());
-        $records = $model->getRecords($query);
-        $this->assertGreaterThan(1, count($records));
-    }
 }

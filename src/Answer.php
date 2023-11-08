@@ -8,7 +8,7 @@ class Answer extends Model
 
     public function getRate(int $id): int
     {
-        $result = $this->DB->getRecord($this->table, $id);
+        $result = $this->getRecord($id);
         return $result['rate'];
     }
 }
