@@ -1,10 +1,21 @@
 <?php
 
+namespace App;
+
 class Query
 {
-    public function addSelect($table, array $columns): self
+    private string $sql;
+
+    private string $table;
+
+    public function __construct(string $table)
     {
-        $this->sql = sprintf("SELECT %s FROM %s", implode(',', $columns), $table);
+        $this->table = $table;
+    }
+
+    public function select(array $columns): self
+    {
+        $this->sql = sprintf("SELECT %s FROM %s", implode(',', $columns), $this->table);
         return $this;
     }
 
@@ -36,5 +47,10 @@ class Query
     {
         $this->sql .= sprintf(" GROUP BY %s", implode(',', $columns));
         return $this;
+    }
+
+    public function getSql(): string
+    {
+        return $this->sql;
     }
 }
