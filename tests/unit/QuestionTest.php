@@ -22,7 +22,7 @@ class QuestionTest extends TestCase
     {
         $model = new Question($this->database);
         $query = new Query($model->getTable());
-        $records = $model->getRecords($query);
+        $records = $model->getRecords();
         $this->assertGreaterThan(0, count($records));
     }
 
