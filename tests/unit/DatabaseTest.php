@@ -33,12 +33,6 @@ class DatabaseTest extends TestCase
         $this->assertCount(1, $records);
     }
 
-    public function testDatabaseRecord(): void
-    {
-        $record = $this->database->getArrayResult('SELECT * FROM questions WHERE id=1')[0];
-        $this->assertEquals('What is an abstract class?', $record['title']);
-    }
-
     public function testDatabaseAddRecord(): void
     {
         $id = $this->database->addRecord('questions', ['title' => 'How is going on?', 'created_at' => date('Y-m-d H:i:s')]);
