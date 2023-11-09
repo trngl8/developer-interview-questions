@@ -68,26 +68,22 @@ class Core
     public function run(Request $request): void
     {
         try {
-            $db = $this->getDatabase($_ENV['DATABASE_DSN']);
-            $model = new Question($db);
+            $db = $this->connectDatabase($_ENV['DATABASE_DSN']);
         } catch (\PDOException $e) {
             throw new \Exception($e->getMessage());
         }
 
+        $model = new Question($db);
+
         $path = $request->getPathInfo();
-        switch ($path) {
-            case '/':
-                $this->lastResponse = (new IndexController($this->twig))->index($request, $model);
-                break;
-            case '/api':
-                $this->lastResponse = (new ApiController())->index($request, $model);
-                break;
-            default:
-                $this->lastResponse = new Response('Not found', Response::HTTP_NOT_FOUND);
-        }
+        $this->lastResponse = match ($path) {
+            '/' => (new IndexController($this->twig))->index($request, $model),
+            '/api' => (new ApiController())->index($request, $model),
+            default => new Response('Not found', Response::HTTP_NOT_FOUND),
+        };
     }
 
-    public function getDatabase($dsn = null): DatabaseConnection
+    public function connectDatabase($dsn = null): DatabaseConnection
     {
         if (!$dsn) {
             $dsn = $this->databaseDSN;

@@ -22,7 +22,7 @@ class CoreTest extends TestCase
     {
         $core = new Core('test', true);
         $core->init();
-        $result = $core->getDatabase();
+        $result = $core->connectDatabase();
         $this->assertTrue((bool)$result);
     }
 
@@ -30,13 +30,12 @@ class CoreTest extends TestCase
     {
         $core = new Core('debug', true);
         $core->init();
-        $result = $core->getDatabase();
+        $result = $core->connectDatabase();
         $this->assertTrue((bool)$result);
     }
 
     public function testCoreRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
@@ -48,7 +47,6 @@ class CoreTest extends TestCase
 
     public function testCoreEmptyPostRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
@@ -61,7 +59,6 @@ class CoreTest extends TestCase
 
     public function testCorePostRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
@@ -79,5 +76,16 @@ class CoreTest extends TestCase
         $core->init();
         $result = $core->getExceptionResponse();
         $this->assertTrue((bool)$result);
+    }
+
+    public function testApiRun(): void
+    {
+        $core = new Core('test', true);
+        $core->init();
+        $request = Request::create(
+            '/api'
+        );
+        $core->run($request);
+        $this->assertTrue((bool)$core->getLastResponse());
     }
 }
