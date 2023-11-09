@@ -33,10 +33,14 @@ class Core
 
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
-        $this->dotenv = new Dotenv();
-
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
+    }
+
+    public function init(): void
+    {
+        $this->dotenv = new Dotenv();
+
         $r = new \ReflectionObject($this);
         $dir = $rootDir = \dirname($r->getFileName());
         while (!is_file($dir.'/composer.json')) {
@@ -47,10 +51,7 @@ class Core
         }
         $this->corePath = $dir . '/';
         $this->dotenv->load($this->corePath . '.env');
-    }
 
-    public function init(): void
-    {
         $customEnv = sprintf($this->corePath . '.env.%s', $this->env);
         if (file_exists($customEnv)) {
             $this->dotenv->load($customEnv);
@@ -106,7 +107,7 @@ class Core
 
     public function getExceptionResponse(): Response
     {
-        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'General error']));
+        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'Not found']), Response::HTTP_NOT_FOUND);
         return $this->lastResponse;
     }
 

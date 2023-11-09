@@ -42,7 +42,8 @@ class CoreTest extends TestCase
             '/'
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCoreEmptyPostRun(): void
@@ -54,20 +55,27 @@ class CoreTest extends TestCase
             'POST'
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCorePostRun(): void
     {
         $core = new Core('test', true);
         $core->init();
+        Request::create('/');
         $request = Request::create(
             '/',
             'POST',
+            [],
+            [],
+            [],
+            [],
             ['title' => 'test version?']
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetExceptionResponse(): void
@@ -86,6 +94,19 @@ class CoreTest extends TestCase
             '/api'
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $responseData = json_decode($core->getLastResponse()->getContent(), true);
+        $this->assertGreaterThan(1, count($responseData));
+        $this->assertEquals('What is an abstract class?', $responseData[0]['title']);
+    }
+
+    public function testApiPostRun(): void
+    {
+        $core = new Core('test', true);
+        $core->init();
+        $request = Request::create(
+            '/api', 'POST', [], [], [], [], '{"title":"test version?"}'
+        );
+        $core->run($request);
+        $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());
     }
 }
