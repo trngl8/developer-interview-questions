@@ -1,16 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
-class Question extends Model
+class Question extends AbstractModel
 {
     protected string $table = 'questions';
-
-    public function getRecords(Query $query): array
-    {
-        $query->select();
-        return parent::getRecords($query);
-    }
 
     public function addQuestion(array $data): array
     {

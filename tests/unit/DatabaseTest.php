@@ -2,13 +2,13 @@
 
 namespace App\Tests\Unit;
 
-use App\DatabaseFactory;
-use App\RecordsInterface;
+use App\Database\ChangeRecordsInterface;
+use App\Database\DatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    private RecordsInterface $database;
+    private ChangeRecordsInterface $database;
 
     public function setUp(): void {
         parent::setUp();
@@ -17,32 +17,20 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseRecords(): void
     {
-        $records = $this->database->getRecords('questions');
+        $records = $this->database->getArrayResult('SELECT * FROM questions');
         $this->assertGreaterThan(1, count($records));
     }
 
     public function testDatabaseRecordsLimit(): void
     {
-        $records = $this->database->getRecords('questions', 2);
+        $records = $this->database->getArrayResult('SELECT * FROM questions LIMIT 2');
         $this->assertCount(2, $records);
     }
 
     public function testDatabaseRecordsWhere(): void
     {
-        $records = $this->database->getRecords('questions', 3, [], ['id > 0']);
-        $this->assertCount(3, $records);
-    }
-
-    public function testDatabaseRecordsHaving(): void
-    {
-        $records = $this->database->getRecords('questions', 3, [], [], ['c > 0']);
-        $this->assertGreaterThan(1, $records);
-    }
-
-    public function testDatabaseRecord(): void
-    {
-        $record = $this->database->getRecord('questions', 1);
-        $this->assertEquals('What is an abstract class?', $record['title']);
+        $records = $this->database->getArrayResult('SELECT * FROM questions WHERE id=1');
+        $this->assertCount(1, $records);
     }
 
     public function testDatabaseAddRecord(): void
@@ -54,7 +42,7 @@ class DatabaseTest extends TestCase
     public function testDatabaseRemoveRecord(): void
     {
         $this->database->removeRecord('questions', 4);
-        $records = $this->database->getRecords('questions');
+        $records = $this->database->getArrayResult('SELECT * FROM questions');
         $this->assertCount(3, $records);
     }
 

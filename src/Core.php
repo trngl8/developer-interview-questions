@@ -3,12 +3,16 @@
 namespace App;
 
 use App\Controller\IndexController;
+use App\Database\DatabaseConnection;
+use App\Database\DatabaseFactory;
+use App\Exception\CoreException;
 use App\Exception\DatabaseException;
+use App\Model\Question;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Core
 {
@@ -79,7 +83,7 @@ class Core
         }
     }
 
-    public function getDatabase($dsn = null)
+    public function getDatabase($dsn = null): DatabaseConnection
     {
         if (!$dsn) {
             $dsn = $this->databaseDSN;
@@ -88,8 +92,8 @@ class Core
         $dsn = str_replace('%kernel.project_directory%', $this->corePath, $dsn);
         try {
             $db = DatabaseFactory::create($dsn);
-        } catch (\Exception $e) {
-           throw new DatabaseException($e->getMessage());
+        } catch (DatabaseException $e) {
+           throw new CoreException($e->getMessage());
         }
 
         return $db;

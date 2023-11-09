@@ -3,7 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\Core;
-use App\DatabaseConnection;
+use App\Database\DatabaseConnection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

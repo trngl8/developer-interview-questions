@@ -2,15 +2,15 @@
 
 namespace App\Tests\Unit;
 
-use App\DatabaseFactory;
-use App\Query;
-use App\Question;
-use App\RecordsInterface;
+use App\Database\ChangeRecordsInterface;
+use App\Database\DatabaseFactory;
+use App\Database\Query;
+use App\Model\Question;
 use PHPUnit\Framework\TestCase;
 
 class QuestionTest extends TestCase
 {
-    private RecordsInterface $database;
+    private ChangeRecordsInterface $database;
 
     public function setUp(): void
     {
@@ -22,7 +22,7 @@ class QuestionTest extends TestCase
     {
         $model = new Question($this->database);
         $query = new Query($model->getTable());
-        $records = $model->getRecords($query);
+        $records = $model->getRecords();
         $this->assertGreaterThan(0, count($records));
     }
 
@@ -55,13 +55,5 @@ class QuestionTest extends TestCase
             'created_at' => date('Y-m-d H:i:s'),
         ]);
         $this->assertEquals('It is going on well', $question['answers'][0]['body']);
-    }
-
-    public function testGetItemsSuccess(): void
-    {
-        $model = new Question($this->database);
-        $query = new Query($model->getTable());
-        $records = $model->getRecords($query);
-        $this->assertGreaterThan(1, count($records));
     }
 }
