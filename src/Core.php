@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Controller\ApiController;
 use App\Controller\IndexController;
 use App\Database\DatabaseConnection;
 use App\Database\DatabaseFactory;
@@ -77,6 +78,9 @@ class Core
         switch ($path) {
             case '/':
                 $this->lastResponse = (new IndexController($this->twig))->index($request, $model);
+                break;
+            case '/api':
+                $this->lastResponse = (new ApiController())->index($request, $model);
                 break;
             default:
                 $this->lastResponse = new Response('Not found', Response::HTTP_NOT_FOUND);
