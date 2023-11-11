@@ -19,17 +19,17 @@ class Mailer
         $this->logger = $logger;
     }
 
-    public function sendConfirmEmail(string $email, string $token): void
+    public function sendConfirmEmail(string $name, string $email, string $token): void
     {
         $settings = Core::getMailerSettings();
         $email = (new TemplatedEmail())
             ->from($settings->adminEmail)
-            ->to(new Address($email))
+            ->to(new Address($email, $name))
             ->subject('Thanks for signing up!')
             ->htmlTemplate('emails/confirm.html.twig')
             ->context([
                 'expiration_date' => new \DateTime('+7 days'),
-                'username' => 'foo',
+                'name' => $name,
                 'token' => $token
             ]);
         try {
@@ -38,6 +38,8 @@ class Mailer
             $this->logger->error($e->getMessage());
             throw new \Exception($e->getMessage());
         }
+
+        // TODO write result mail and send status to the database
     }
 
 }
