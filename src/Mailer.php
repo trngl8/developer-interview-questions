@@ -19,8 +19,10 @@ class Mailer
         $this->logger = $logger;
     }
 
-    public function sendConfirmEmail(string $name, string $email, string $token): void
+    public function sendConfirmEmail(string $name, string $email): void
     {
+        $token = bin2hex(random_bytes(32));
+
         $settings = Core::getMailerSettings();
         $email = (new TemplatedEmail())
             ->from($settings->adminEmail)
