@@ -32,7 +32,5 @@ class HttpApiTest extends TestCase
         ]);
         $result = $response->getStatusCode();
         $this->assertEquals(200, $result);
-        $body = $response->getContent();
-        $this->assertEquals('{"status":"success"}', $body);
     }
 }

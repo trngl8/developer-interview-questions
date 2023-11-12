@@ -106,10 +106,12 @@ class CoreTest extends TestCase
             '/api', 'POST', [], [], [], [], '{"title":"test version?"}'
         );
         $core->run($request);
-        $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());
+        $responseData = json_decode($core->getLastResponse()->getContent(), true);
+        $id = $responseData['id'];
+        $this->assertGreaterThan(1, $id);
 
         $request = Request::create(
-            '/api/questions/4/delete', 'DELETE'
+            sprintf('/api/questions/%d/delete', $id), 'DELETE'
         );
         $core->run($request);
         $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());

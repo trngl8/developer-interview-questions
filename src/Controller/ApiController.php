@@ -12,11 +12,11 @@ class ApiController
     {
         if ($request->getMethod() === 'POST') {
             $data = json_decode($request->getContent(), true);
-            $model->addQuestion([
+            $result = $model->addQuestion([
                 'title' => $data['title'],
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
-            return new JsonResponse(['status' => 'success']);
+            return new JsonResponse(['status' => 'success', 'id' => $result['id']]);
         }
 
         return new JsonResponse($model->getRecords());
