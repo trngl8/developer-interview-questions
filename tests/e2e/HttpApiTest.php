@@ -24,13 +24,17 @@ class HttpApiTest extends TestCase
         $this->assertEquals('application/json', $response->getHeaders()['content-type'][0]);
     }
 
-    public function testIndexPostSuccess(): void
+    public function testApiSuccess(): void
     {
         $response = $this->httpClient->request('POST', 'http://localhost:8000/api', [
             'json' => ['title' => 'What is the day today?'],
             'headers' => ['content-type' => 'application/json']
         ]);
-        $result = $response->getStatusCode();
-        $this->assertEquals(200, $result);
+        $this->assertEquals(200, $response->getStatusCode());
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals('success', $result['status']);
+        $id = $result['id'];
+        $response = $this->httpClient->request('DELETE', sprintf('http://localhost:8000/api/questions/%d/delete', $id));
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

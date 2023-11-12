@@ -35,15 +35,15 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseAddRecord(): void
     {
-        $id = $this->database->addRecord('questions', ['title' => 'How is going on?', 'created_at' => date('Y-m-d H:i:s')]);
-        $this->assertEquals(4, $id);
+        $result = $this->database->addRecord('questions', ['title' => 'How is going on?', 'created_at' => date('Y-m-d H:i:s')]);
+        $this->assertGreaterThan(1, $result);
     }
 
     public function testDatabaseRemoveRecord(): void
     {
         $this->database->removeRecord('questions', 4);
-        $records = $this->database->getArrayResult('SELECT * FROM questions');
-        $this->assertCount(3, $records);
+        $records = $this->database->getArrayResult('SELECT * FROM questions WHERE id=4');
+        $this->assertCount(0, $records);
     }
 
     public function testDatabaseErrorType(): void

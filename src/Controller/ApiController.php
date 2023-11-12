@@ -22,11 +22,6 @@ class ApiController
         return new JsonResponse($model->getRecords());
     }
 
-    public function show(Request $request, AbstractModel $model): JsonResponse
-    {
-        return new JsonResponse(['status' => 'success']);
-    }
-
     public function delete(Request $request, AbstractModel $model, $id): JsonResponse
     {
         $model->remove($id);
