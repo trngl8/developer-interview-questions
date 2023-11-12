@@ -119,4 +119,14 @@ class Core
     {
         return $this->lastResponse;
     }
+
+    public static function getMailerSettings() : \ArrayObject
+    {
+        if($_ENV['MAILER_ADMIN_EMAIL'])  {
+            new \ArrayObject([
+                'adminEmail' => $_ENV['MAILER_ADMIN_EMAIL'],
+            ]);
+        }
+        return new \ArrayObject();
+    }
 }
