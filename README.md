@@ -20,7 +20,7 @@ php bin/app
 ### How to run:
 
 ```commandline
-php -S localhost:8000
+php -S localhost:8000 -t public
 ```
 
 ### How to run tests:
