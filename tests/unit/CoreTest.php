@@ -22,7 +22,7 @@ class CoreTest extends TestCase
     {
         $core = new Core('test', true);
         $core->init();
-        $result = $core->getDatabase();
+        $result = $core->connectDatabase();
         $this->assertTrue((bool)$result);
     }
 
@@ -30,25 +30,24 @@ class CoreTest extends TestCase
     {
         $core = new Core('debug', true);
         $core->init();
-        $result = $core->getDatabase();
+        $result = $core->connectDatabase();
         $this->assertTrue((bool)$result);
     }
 
     public function testCoreRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
             '/'
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCoreEmptyPostRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
@@ -56,21 +55,27 @@ class CoreTest extends TestCase
             'POST'
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCorePostRun(): void
     {
-        $database = $this->createMock(DatabaseConnection::class);
         $core = new Core('test', true);
         $core->init();
+        Request::create('/');
         $request = Request::create(
             '/',
             'POST',
+            [],
+            [],
+            [],
+            [],
             ['title' => 'test version?']
         );
         $core->run($request);
-        $this->assertTrue((bool)$core->getLastResponse());
+        $response = $core->getLastResponse();
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetExceptionResponse(): void
@@ -79,5 +84,36 @@ class CoreTest extends TestCase
         $core->init();
         $result = $core->getExceptionResponse();
         $this->assertTrue((bool)$result);
+    }
+
+    public function testApiRun(): void
+    {
+        $core = new Core('test', true);
+        $core->init();
+        $request = Request::create(
+            '/api'
+        );
+        $core->run($request);
+        $responseData = json_decode($core->getLastResponse()->getContent(), true);
+        $this->assertGreaterThan(1, count($responseData));
+    }
+
+    public function testApiCreateDeleteSuccess(): void
+    {
+        $core = new Core('test', true);
+        $core->init();
+        $request = Request::create(
+            '/api', 'POST', [], [], [], [], '{"title":"test version?"}'
+        );
+        $core->run($request);
+        $responseData = json_decode($core->getLastResponse()->getContent(), true);
+        $id = $responseData['id'];
+        $this->assertGreaterThan(1, $id);
+
+        $request = Request::create(
+            sprintf('/api/questions/%d/delete', $id), 'DELETE'
+        );
+        $core->run($request);
+        $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());
     }
 }

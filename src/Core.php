@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Controller\ApiController;
 use App\Controller\IndexController;
 use App\Database\DatabaseConnection;
 use App\Database\DatabaseFactory;
@@ -32,10 +33,15 @@ class Core
 
     public function __construct(string $APP_ENV, bool $APP_DEBUG)
     {
-        $this->dotenv = new Dotenv();
-
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
+        $this->lastResponse = new Response("Not Found", Response::HTTP_NOT_FOUND);
+    }
+
+    public function init(): void
+    {
+        $this->dotenv = new Dotenv();
+
         $r = new \ReflectionObject($this);
         $dir = $rootDir = \dirname($r->getFileName());
         while (!is_file($dir.'/composer.json')) {
@@ -46,10 +52,7 @@ class Core
         }
         $this->corePath = $dir . '/';
         $this->dotenv->load($this->corePath . '.env');
-    }
 
-    public function init(): void
-    {
         $customEnv = sprintf($this->corePath . '.env.%s', $this->env);
         if (file_exists($customEnv)) {
             $this->dotenv->load($customEnv);
@@ -67,23 +70,40 @@ class Core
     public function run(Request $request): void
     {
         try {
-            $db = $this->getDatabase($_ENV['DATABASE_DSN']);
-            $model = new Question($db);
+            $db = $this->connectDatabase($_ENV['DATABASE_DSN']);
         } catch (\PDOException $e) {
             throw new \Exception($e->getMessage());
         }
 
-        $path = $request->getPathInfo();
-        switch ($path) {
-            case '/':
-                $this->lastResponse = (new IndexController($this->twig))->index($request, $model);
+        $model = new Question($db);
+
+        $requestUri = $request->getPathInfo();
+        $routes = [
+            '/' => [IndexController::class, 'index'],
+            '/api' => [ApiController::class, 'index'],
+            '/api/questions/(\d+)/show' => [ApiController::class, 'show'],
+            '/api/questions/(\d+)/delete' => [ApiController::class, 'delete'],
+        ];
+        $routes = array_reverse($routes);
+        $matches = [];
+        foreach ($routes as $pattern => $action) {
+            $pattern = '#' . str_replace('/', '\/', $pattern) . '#';
+
+            if (preg_match($pattern, $requestUri, $matches)) {
+                array_shift($matches);
+                $controller = new $action[0]($this->twig);
+                try {
+                    $this->lastResponse = call_user_func_array([$controller, $action[1]], array_merge([$request, $model], $matches));
+                } catch (\TypeError $e) {
+                    throw new CoreException($e->getMessage());
+                }
+
                 break;
-            default:
-                $this->lastResponse = new Response('Not found', Response::HTTP_NOT_FOUND);
+            }
         }
     }
 
-    public function getDatabase($dsn = null): DatabaseConnection
+    public function connectDatabase($dsn = null): DatabaseConnection
     {
         if (!$dsn) {
             $dsn = $this->databaseDSN;
@@ -106,7 +126,7 @@ class Core
 
     public function getExceptionResponse(): Response
     {
-        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'General error']));
+        $this->lastResponse = new Response($this->twig->render('error.html.twig', ['message' => 'Not found']), Response::HTTP_NOT_FOUND);
         return $this->lastResponse;
     }
 

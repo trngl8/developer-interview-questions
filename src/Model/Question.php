@@ -6,6 +6,12 @@ class Question extends AbstractModel
 {
     protected string $table = 'questions';
 
+    public function remove(int $id): void
+    {
+        $this->DB->removeRecord($this->table, $id);
+        unset($this->records[$id]);
+    }
+
     public function addQuestion(array $data): array
     {
         $id = $this->DB->addRecord($this->table, $data);
