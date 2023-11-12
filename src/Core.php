@@ -35,6 +35,7 @@ class Core
     {
         $this->env = $APP_ENV;
         $this->debug = $APP_DEBUG;
+        $this->lastResponse = new Response("Not Found", Response::HTTP_NOT_FOUND);
     }
 
     public function init(): void
@@ -76,12 +77,30 @@ class Core
 
         $model = new Question($db);
 
-        $path = $request->getPathInfo();
-        $this->lastResponse = match ($path) {
-            '/' => (new IndexController($this->twig))->index($request, $model),
-            '/api' => (new ApiController())->index($request, $model),
-            default => new Response('Not found', Response::HTTP_NOT_FOUND),
-        };
+        $requestUri = $request->getPathInfo();
+        $routes = [
+            '/' => [IndexController::class, 'index'],
+            '/api' => [ApiController::class, 'index'],
+            '/api/questions/(\d+)/show' => [ApiController::class, 'show'],
+            '/api/questions/(\d+)/delete' => [ApiController::class, 'delete'],
+        ];
+        $routes = array_reverse($routes);
+        $matches = [];
+        foreach ($routes as $pattern => $action) {
+            $pattern = '#' . str_replace('/', '\/', $pattern) . '#';
+
+            if (preg_match($pattern, $requestUri, $matches)) {
+                array_shift($matches);
+                $controller = new $action[0]($this->twig);
+                try {
+                    $this->lastResponse = call_user_func_array([$controller, $action[1]], array_merge([$request, $model], $matches));
+                } catch (\TypeError $e) {
+                    throw new CoreException($e->getMessage());
+                }
+
+                break;
+            }
+        }
     }
 
     public function connectDatabase($dsn = null): DatabaseConnection

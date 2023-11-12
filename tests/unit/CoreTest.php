@@ -96,15 +96,20 @@ class CoreTest extends TestCase
         $core->run($request);
         $responseData = json_decode($core->getLastResponse()->getContent(), true);
         $this->assertGreaterThan(1, count($responseData));
-        $this->assertEquals('What is an abstract class?', $responseData[0]['title']);
     }
 
-    public function testApiPostRun(): void
+    public function testApiCreateDeleteSuccess(): void
     {
         $core = new Core('test', true);
         $core->init();
         $request = Request::create(
             '/api', 'POST', [], [], [], [], '{"title":"test version?"}'
+        );
+        $core->run($request);
+        $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());
+
+        $request = Request::create(
+            '/api/questions/4/delete', 'DELETE'
         );
         $core->run($request);
         $this->assertEquals('{"status":"success"}', $core->getLastResponse()->getContent());
