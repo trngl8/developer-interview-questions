@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Core;
 use Monolog\Handler\StreamHandler;
@@ -9,7 +9,7 @@ use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
-$corePath = __DIR__.'/';
+$corePath = __DIR__.'/../';
 $dotenv = new Dotenv();
 $dotenv->load($corePath . '.env');
 

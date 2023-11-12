@@ -6,5 +6,5 @@ composer.lock
 
 vendor
 node_modules
-dist
+public/dist
 var
