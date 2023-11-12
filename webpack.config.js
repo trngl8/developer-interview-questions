@@ -6,7 +6,7 @@ module.exports = {
     plugins: [new miniCssExtractPlugin()],
     output: {
         filename: 'main.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'public/dist')
     },
     module: {
         rules: [
