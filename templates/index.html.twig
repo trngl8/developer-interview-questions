@@ -31,6 +31,8 @@
 </div>
 
 <div class="container">
+    {% block main %}
+
     <h3 class="mb-4">Found {{ questions|length }} records</h3>
     <div class="list-group mb-5">
         {% for item in questions %}
@@ -53,8 +55,10 @@
     </form>
     {% endif %}
 
-    </div>
-    <script src="./dist/main.js"></script>
+    {% endblock %}
+</div>
+
+<script src="./dist/main.js"></script>
 
 </body>
 </html>

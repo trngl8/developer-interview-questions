@@ -36,4 +36,11 @@ class HttpIndexTest extends TestCase
         $result = $response->getStatusCode();
         $this->assertEquals(200, $result);
     }
+
+    public function testIndexShowSuccess(): void
+    {
+        $response = $this->httpClient->request('GET', 'http://localhost:8000/questions/1', ['body' => ['test' => 'Your question?']]);
+        $result = $response->getStatusCode();
+        $this->assertEquals(200, $result);
+    }
 }

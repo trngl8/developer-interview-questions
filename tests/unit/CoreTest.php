@@ -111,6 +111,18 @@ class CoreTest extends TestCase
         $this->assertGreaterThan(1, $id);
 
         $request = Request::create(
+            sprintf('/api/questions/%d/show', $id)
+        );
+        $core->run($request);
+        $this->assertEquals(200, $core->getLastResponse()->getStatusCode());
+
+        $request = Request::create(
+            sprintf('/questions/%d', $id)
+        );
+        $core->run($request);
+        $this->assertEquals(200, $core->getLastResponse()->getStatusCode());
+
+        $request = Request::create(
             sprintf('/api/questions/%d/delete', $id), 'DELETE'
         );
         $core->run($request);

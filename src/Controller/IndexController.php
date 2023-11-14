@@ -58,4 +58,14 @@ class IndexController
 
         return new Response($content);
     }
+
+    public function show(Request $request, AbstractModel $model, int $id): Response
+    {
+        $record = $model->getRecord($id);
+        $content = $this->twig->render('show.html.twig', [
+            'question' => $record,
+        ]);
+
+        return new Response($content);
+    }
 }
