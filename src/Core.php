@@ -81,6 +81,7 @@ class Core
         $routes = [
             '/' => [IndexController::class, 'index'],
             '/api' => [ApiController::class, 'index'],
+            '/questions/(\d+)' => [IndexController::class, 'show'],
             '/api/questions/(\d+)/show' => [ApiController::class, 'show'],
             '/api/questions/(\d+)/delete' => [ApiController::class, 'delete'],
         ];
