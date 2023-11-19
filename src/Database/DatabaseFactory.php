@@ -9,7 +9,7 @@ class DatabaseFactory
     public static function create(string $dsn): DatabaseConnection
     {
         $matches = [];
-        if(!preg_match('/^(\w+):\/\/(.*)/', $dsn, $matches)) {
+        if(!preg_match('/^(\w+):\/\/(.*)/', $dsn, $matches) || count($matches) !== 3) {
             throw new DatabaseException(sprintf('Invalid DSN: %s', $dsn));
         }
 
