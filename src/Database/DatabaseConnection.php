@@ -6,6 +6,11 @@ abstract class DatabaseConnection implements ChangeRecordsInterface
 {
     protected \PDO $DB;
 
+    public function __construct(\PDO $pdo)
+    {
+        $this->DB = $pdo;
+    }
+
     public function addRecord(string $table, array $data): int
     {
         $sql = sprintf(
