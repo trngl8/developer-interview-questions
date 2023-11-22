@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseConnectionTest extends TestCase
 {
+    public function testSqliteDatabaseConnection(): void
+    {
+        $database = DatabaseFactory::create('sqlite://'. __DIR__ . '/../../var/test.db');
+        $this->assertEquals('sqlite', $database->getType());
+    }
     public function testWrongDsnConnectionFail(): void
     {
         $this->expectException(DatabaseException::class);
