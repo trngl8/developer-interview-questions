@@ -9,7 +9,7 @@ $db->enableExceptions(true);
 $db->query('DROP TABLE IF EXISTS questions');
 $db->query('DROP TABLE IF EXISTS answers');
 
-$createTablesSql = file_get_contents(__DIR__ . '/../database/init.sql');
+$createTablesSql = file_get_contents(__DIR__ . '/../database/init_sqlite.sql');
 $parts = explode(';', $createTablesSql);
 foreach ($parts as $part) {
     $db->query($part);
